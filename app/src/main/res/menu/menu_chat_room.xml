@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.ideamosweb.futlife.views.ChatRoom">
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_plus_menu"
+        android:title="@string/action_settings"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/action_score"
+                android:orderInCategory="100"
+                android:title="@string/label_upload_result"
+                android:icon="@drawable/ic_score"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/action_cancel"
+                android:orderInCategory="100"
+                android:title="@string/label_notification_annul"
+                android:icon="@drawable/ic_cancel_challenge"
+                app:showAsAction="ifRoom" />
+        </menu>
+    </item>
+</menu>

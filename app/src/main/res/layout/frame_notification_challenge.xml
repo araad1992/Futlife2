@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginTop="40dp"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <de.hdodenhof.circleimageview.CircleImageView
+            app:border_width="6dp"
+            app:border_color="@color/divider"
+            android:id="@+id/avatar_player"
+            android:src="@drawable/avatar_default"
+            android:layout_gravity="center"
+            android:layout_width="150dp"
+            android:layout_height="150dp" />
+        <TextView
+            android:id="@+id/lbl_username_player"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center"
+            android:text="@string/challenge_username"
+            android:textColor="@color/icons"
+            android:textSize="24sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/lbl_fullname_player"
+            android:layout_gravity="center"
+            android:text="@string/challenge_username"
+            android:textColor="@color/icons"
+            android:textSize="19sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <View
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:background="@color/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+        <TextView
+            android:id="@+id/lbl_amount"
+            android:layout_gravity="center"
+            android:text="@string/challenge_username"
+            android:textColor="@color/icons"
+            android:textSize="24sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/lbl_gain"
+            android:layout_gravity="center"
+            android:text="@string/challenge_username"
+            android:textColor="@color/icons"
+            android:textSize="24sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        android:layout_marginBottom="90dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/layout_cancel"
+            android:orientation="vertical"
+            android:layout_marginStart="7dp"
+            android:layout_marginEnd="7dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:id="@+id/but_cancel"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_cancel_challenge"
+                android:background="@color/colorTransparent"
+                android:padding="1dp"
+                android:scaleType="centerInside"
+                android:layout_width="80dp"
+                android:layout_height="80dp" />
+            <TextView
+                android:id="@+id/lbl_cancel"
+                android:text="@string/label_notification_cancel"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/icons"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layout_wait"
+            android:orientation="vertical"
+            android:layout_marginStart="7dp"
+            android:layout_marginEnd="7dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:id="@+id/but_wait"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_wait_challenge"
+                android:background="@color/colorTransparent"
+                android:padding="1dp"
+                android:scaleType="centerInside"
+                android:layout_width="80dp"
+                android:layout_height="80dp" />
+            <TextView
+                android:id="@+id/lbl_wait"
+                android:text="@string/label_notification_wait"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/icons"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layout_done"
+            android:orientation="vertical"
+            android:layout_marginStart="7dp"
+            android:layout_marginEnd="7dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:id="@+id/but_done"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_done_challenge"
+                android:background="@color/colorTransparent"
+                android:padding="1dp"
+                android:scaleType="centerInside"
+                android:layout_width="80dp"
+                android:layout_height="80dp" />
+            <TextView
+                android:id="@+id/lbl_done"
+                android:text="@string/label_notification_done"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/icons"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

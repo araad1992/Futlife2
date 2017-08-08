@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.ideamosweb.futlife">
+
+    <!-- Permisos para acceso a Internet -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Permisos para acceso a la lectura o escritura de archivos -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:required="true" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:required="true" />
+    <!-- Permiso para acceder al vibrador del equipo -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- Permisos para acceso a la camara -->
+    <application
+        android:name=".Service.FutlifeApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:supportsRtl="true"
+        tools:ignore="AllowBackup"
+        tools:replace="android:icon">
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <!-- Pantalla de login/registro de facebook -->
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!-- Pantalla de bienvenida -->
+        <activity
+            android:name=".views.Welcome"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- Pantalla de login -->
+        <activity
+            android:name=".views.Login"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- Pantalla de registro -->
+        <activity
+            android:name=".views.Register"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- Pantalla de seleccion de consola -->
+        <activity
+            android:name=".views.SelectConsole"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/RegisterProcedureTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- Pantalla de seleccion del juego -->
+        <activity
+            android:name=".views.SelectGame"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/RegisterProcedureTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- Pantalla de resumen -->
+        <activity
+            android:name=".views.Summary"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/RegisterProcedureTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- Pantalla de timeline -->
+        <activity
+            android:name=".views.Timeline"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/TimelineTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <!-- The open inbox action will attempt to start an activity with UA -->
+            <intent-filter>
+                <action android:name="com.urbanairship.VIEW_RICH_PUSH_INBOX" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <!-- Filter when requesting to view the inbox activity with UA -->
+            <intent-filter>
+                <action android:name="com.urbanairship.VIEW_RICH_PUSH_INBOX" />
+
+                <data android:scheme="message" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- Pantalla de perfil del usuario -->
+        <activity
+            android:name=".views.Profile"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/ProfileTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- Pantalla base para los fragments -->
+        <activity
+            android:name=".views.BaseFrames"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <!-- Pantalla para el chat de la aplicación -->
+        <activity
+            android:name=".views.ChatRoom"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- Pantalla de pagos online y efectivo -->
+        <activity
+            android:name=".views.Payments"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/TimelineTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- Pantalla de retos reportados -->
+        <activity
+            android:name=".views.Reported"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/TimelineTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- Pantalla de retiro de dinero -->
+        <activity
+            android:name=".views.Retreats"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/TimelineTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- Pantalla de los retos expirados -->
+        <activity
+            android:name=".views.Expired"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/TimelineTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- Pantalla de terminos y condiciones -->
+        <activity
+            android:name=".views.TermsConditions"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/TimelineTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- Pantalla del intro de la app -->
+        <activity
+            android:name=".views.Tutorial"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/TimelineTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- Pantalla de configuración de la app -->
+        <activity
+            android:name=".views.Settings"
+            android:label="@string/title_activity_settings"
+            android:screenOrientation="portrait"
+            android:theme="@style/TimelineTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- Pantalla de feedback de la app -->
+        <activity
+            android:name=".views.Feedback"
+            android:label="@string/title_activity_feedback"
+            android:screenOrientation="portrait"
+            android:theme="@style/TimelineTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- Pantalla de presentacion de la app -->
+        <activity
+            android:name="za.co.riggaroo.materialhelptutorial.tutorial.MaterialTutorialActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/IntroTheme" />
+
+        <!-- Optional: Receives push and registration events from the Urban Airship SDK. -->
+        <receiver
+            android:name=".NotificationsSettings.FutlifeAirshipReceiber"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.urbanairship.push.OPENED" />
+                <action android:name="com.urbanairship.push.DISMISSED" />
+                <action android:name="com.urbanairship.push.RECEIVED" />
+
+                <category android:name="com.ideamosweb.futlife" />
+            </intent-filter>
+        </receiver>
+        <!-- Servicio para revisar los retos expirados -->
+        <service
+            android:name=".Service.RevisionService"
+            android:enabled="true"
+            android:exported="true" />
+    </application>
+
+</manifest>

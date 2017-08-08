@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#020E19</color>
+    <color name="colorPrimaryDark">#051C33</color>
+    <color name="colorAccent">#55A323</color>
+    <color name="colorAccentDark">#93b77c</color>
+    <color name="colorAccentLight">#CC9E2E</color>
+    <color name="colorTransparent">#00000000</color>
+
+    <color name="primaryLight">#C5CAE9</color>
+    <color name="primaryText">#212121</color>
+    <color name="primaryTextReward">#F7C600</color>
+    <color name="primaryTextAvailable">#55A323</color>
+    <color name="primaryTextDisable">#FF1D1D</color>
+
+    <color name="secondaryText">#757575</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="iconsAccent">#E1DD34</color>
+    <color name="divider">#bfbfbf</color>
+    <color name="buttons">#b7dedede</color>
+    <color name="separed">#9ddedede</color>
+    <color name="iconsFacebook">#3B5998</color>
+    <color name="iconsFacebookDark">#69799c</color>
+    <color name="colorDark">#d103111e</color>
+    <color name="colorTransparentDark">#9a03111e</color>
+    <color name="colorPrimaryOpacity">#c8051c33</color>
+    <color name="colorTransparentLight">#c803111e</color>
+    <color name="colorShadown">#a203111e</color>
+    <color name="colorCardDark">#252525</color>
+    <color name="transparent">#00000000</color>
+    <color name="blackColor">#000000</color>
+    <color name="icons_light">#23ffffff</color>
+
+    <!-- Otros colores -->
+    <color name="color_green">#16C431</color>
+    <!-- Colores mensajes -->
+    <color name="color_info_light">#00CCFF</color>
+    <color name="color_info">#2F72D3</color>
+    <color name="color_success">#55A323</color>
+    <color name="color_warnings">#f5bf2a</color>
+    <color name="color_errors">#bc3e3e</color>
+    <color name="color_alerts">#ff8800</color>
+
+</resources>

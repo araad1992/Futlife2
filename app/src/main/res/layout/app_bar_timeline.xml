@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_timeline"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.ideamosweb.futlife.views.Timeline">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/SplashTheme.AppBarOverlay">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginEnd="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:id="@+id/logo_futlife"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/futlife_title"
+                    android:layout_width="160dp"
+                    android:layout_height="18dp" />
+                <EditText
+                    android:id="@+id/txt_search"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:hint="@string/action_search"
+                    android:textColor="@color/icons"
+                    android:imeOptions="actionSearch"
+                    android:inputType="textFilter"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </android.support.v7.widget.Toolbar>
+        <TextView
+            android:id="@+id/lbl_user_balance"
+            android:text="@string/amount"
+            android:textColor="@color/color_warnings"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_layout"
+            app:tabTextAppearance="@style/MyTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </android.support.design.widget.AppBarLayout>
+    <!-- Contenido Principal -->
+    <include layout="@layout/content_timeline" />
+    <!-- Bottom Sheet -->
+    <include layout="@layout/sheet_dialog_filter" />
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        app:fabSize="normal"
+        app:fab_colorNormal="@color/colorAccent"
+        app:fab_colorPressed="@color/colorAccentDark"
+        app:fab_colorRipple="@color/colorAccentDark"
+        android:layout_margin="@dimen/fab_margin"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_challenge_player" />
+
+</android.support.design.widget.CoordinatorLayout>

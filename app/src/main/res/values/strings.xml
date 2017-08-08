@@ -1,0 +1,473 @@
+<resources>
+    <string name="app_name">FutLife</string>
+    <!-- Cadenas de conexion api -->
+    <string name="url_test">http://192.168.0.186:8000/m/v1</string>
+    <string name="url_api">http://35.160.110.11/m/v1</string>
+    <string name="url_admin">http://35.160.110.11/admin</string>
+
+    <string name="url_api_notification_payments">http://35.160.110.11/m/v1/recharge/notify/first</string>
+    <string name="url_api_notification_recharge">http://35.160.110.11/m/v1/recharge/notify/last</string>
+
+    <!-- Cadenas de pantalla login -->
+    <string name="login_email">Usuario o Correo Electronico</string>
+    <string name="login_password">Contraseña</string>
+    <string name="login_reset_password">¿Olvidaste tu contraseña?</string>
+    <string name="login_tag_register">¿Aún no tienes cuenta? <b><i>¡Registrate!</i></b></string>
+
+    <!-- Cadenas de pantalla registro -->
+    <string name="register_email">Correo Electronico</string>
+    <string name="register_fullname">Nombre Completo</string>
+    <string name="register_username">Usuario Futlife</string>
+    <string name="title_activity_select_console">SelectConsole</string>
+
+    <!-- Cadenas de pantalla seleccion de consolas -->
+    <string name="select_console_title">Escoge Tu Consola</string>
+    <string name="select_console_subtitle">Puedes Escoger Más de Una</string>
+    <string name="select_console_title_list">Consolas Seleccionadas</string>
+
+    <!-- Cadenas de pantalla seleccion de juegos -->
+    <string name="select_game_title">Escoge Tu Juego</string>
+    <string name="select_game_subtitle">Puedes Escoger Más de Un Juego</string>
+
+    <!-- Cadenas de dialogs y alertas -->
+    <string name="dialog_title_player_id">Agregue un PLAYER ID a la consola</string>
+    <string name="dialog_your_player_id">Ingresa tu Player ID</string>
+    <string name="dialog_title_information">Actualiza tú información personal</string>
+    <string name="dialog_description_question">Selecciona la consola para el juego</string>
+    <string name="dialog_ok">Aceptar</string>
+    <string name="dialog_update">Actualizar</string>
+    <string name="dialog_cancel">Cancelar</string>
+    <string name="dialog_no">No</string>
+    <string name="dialog_yes">Si</string>
+
+    <!-- Cadenas de la pantalla resumen -->
+    <string name="summary_title_activity">Resumen</string>
+    <string name="summary_button_confirm">Confirmar</string>
+
+    <!-- Cadenas de los templates y adapters -->
+    <string name="row_count_1">1</string>
+    <string name="title_activity_timeline">Timeline</string>
+
+    <!-- Cadenas de la pantalla de notificaciones -->
+    <string name="label_notification_cancel">Rechazar</string>
+    <string name="label_notification_annul">Abandonar</string>
+    <string name="label_notification_wait">En Espera</string>
+    <string name="label_notification_done">Aceptar</string>
+    <string name="label_notification_new">¡Nuevo!</string>
+    <string name="label_state_challenge">Recibido</string>
+    <string name="label_upload_result">Enviar Marcador</string>
+
+    <!-- Cadenas de la pantalla de jugadores y retos -->
+    <string name="retar">Retar</string>
+    <string name="challenge_username">Usuario</string>
+    <string name="score_1">1</string>
+    <string name="score_3">3</string>
+    <string name="amount">$100 M</string>
+
+    <!-- Cadenas para el dialog de los retos -->
+    <string name="dialog_challenge_title">RETO</string>
+    <string name="dialog_challenge_amount">Valor</string>
+    <string name="dialog_challenge_real_amount">Ganancia</string>
+    <string name="dialog_challenge_lbl_real_amount">Valor de ganancia real</string>
+    <string name="dialog_challenge_consoles">Consolas</string>
+    <string name="dialog_challenge_games">Juegos</string>
+    <string name="dialog_challenge_cancel">Cancelar</string>
+    <string name="dialog_challenge_done">Retar</string>
+    <string name="dialog_challenge_not_found">No tienes consolas en comun con este jugador</string>
+
+    <!-- Cadenas para el dialog de los retos abiertos -->
+    <string name="dialog_open_challenge_title">RETO ABIERTO</string>
+    <string name="dialog_open_challenge_amount">Apuesta:</string>
+    <string name="dialog_open_challenge_real_amount">Ganancia:</string>
+    <string name="dialog_open_challenge_consoles">Consola:</string>
+    <string name="dialog_open_challenge_games">Juego:</string>
+    <string name="dialog_open_challenge_cancel">Cancelar</string>
+    <string name="dialog_open_challenge_done">Aceptar Reto</string>
+
+    <!-- Cadenas para el dialog del marcador -->
+    <string name="dialog_score_title">MARCADOR</string>
+    <string name="dialog_score_points">:</string>
+    <string name="dialog_score">0</string>
+    <string name="dialog_score_consoles">Tu marcador</string>
+    <string name="dialog_score_games">Marcador rival</string>
+    <string name="dialog_score_cancel">Cancelar</string>
+    <string name="dialog_score_done">Enviar</string>
+
+    <!-- Cadenas para el dialog cuando el saldo es insuficiente -->
+    <string name="dialog_balance_title">¡Sin Saldo!</string>
+    <string name="dialog_balance_message">No tienes el saldo suficiente para iniciar o aceptar un reto, recarga escogiendo entre nuestros dos metodos de pago (tarjeta o efectivo).</string>
+    <string name="dialog_balance_cancel">Cancelar</string>
+    <string name="dialog_balance_done">Recargar</string>
+
+    <!-- Cadenas para el dialog cuando el usuario no tiene registrado los players ID -->
+    <string name="dialog_player_title">¡Sin Player ID!</string>
+    <string name="dialog_player_message">Antes de iniciar o aceptar un reto, primero debes agregar un Player ID a cada consola que seleccionaste en tus preferencias.</string>
+    <string name="dialog_player_cancel">Cancelar</string>
+    <string name="dialog_player_done">Agregar Player ID</string>
+
+    <!-- Cadenas para el dialog cuando el usuario quiera eliminar un reto -->
+    <string name="dialog_delete_message">¿Estas seguro que deseas eliminar este reto?.</string>
+    <string name="dialog_delete_cancel">Cancelar</string>
+    <string name="dialog_delete_ok">Eliminar</string>
+
+    <!-- Cadenas para el dialog del marcador por notificación -->
+    <string name="dialog_score_title_notification">MARCADOR</string>
+    <string name="dialog_score_notification">4 &#8211; 2</string>
+    <string name="dialog_score_cancel_notification">Apelar</string>
+    <string name="dialog_score_done_notification">Confirmar</string>
+
+    <!-- Cadenas para el dialog done el usuario confirma si desea abandonar el reto -->
+    <string name="dialog_leave_challenge_title">¿Deseas Abandonar?</string>
+    <string name="dialog_leave_challenge_message">Recuerda que al abandonar un reto estas aceptando perder por un marcador de 3 a 0 y de perder tu dinero de la apuesta. ¿Deseas abandonar el reto?</string>
+    <string name="dialog_leave_challenge_cancel">Cancelar</string>
+    <string name="dialog_leave_challenge_done">Abandonar</string>
+
+    <!-- Cadenas para el dialog cuando un rival decide abandonar un reto -->
+    <string name="dialog_leave_title">Tu rival abandono</string>
+    <string name="dialog_leave_message">Tu rival ha decidido abandonar el reto, por consiguiente has ganado el reto con un marcador de 3 a 0 y el valor de la apuesta.</string>
+    <string name="dialog_leave_done">Aceptar</string>
+
+    <!-- Cadenas para el dialog de youtube -->
+    <string name="dialog_title_youtube">Agrega el codigo de tu video en youtube</string>
+    <string name="dialog_url_video_youtube">youtube.com/watch?v=[tu-codigo]</string>
+    <string name="dialog_url_video">youtube.com/watch?v=</string>
+    <string name="dialog_url_full_video">https://www.youtube.com/watch?v=</string>
+    <string name="dialog_your_code_video">Ingresa tú codigo de video</string>
+    <string name="dialog_ok_youtube">anexar video</string>
+    <string name="dialog_cancel_youtube">Cancelar</string>
+
+    <!-- Cadenas del menu superior -->
+    <string name="action_search">Buscar</string>
+    <string name="action_filter">Filtrar</string>
+    <string name="action_options">Opciones</string>
+    <string name="action_payments">Recargas y Saldo</string>
+    <string name="action_retiros">Retiros</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="action_intro">Introducción</string>
+    <string name="action_tournament">Torneos</string>
+
+    <!-- Cadenas de las opciones del menu -->
+    <string name="title_navigation">Menu</string>
+    <string name="subtitle_navigation">Contacto</string>
+    <string name="action_menu">Menu Principal</string>
+    <string name="action_home">Mi Perfil</string>
+    <string name="action_about">Quiénes Somos</string>
+    <string name="action_help">Ayuda</string>
+    <string name="action_defeated">Retos Vencidos</string>
+    <string name="action_reported">Retos Reportados</string>
+    <string name="action_terms_conditions">Terminos y Condiciones</string>
+    <string name="action_send">Enviar Correo</string>
+    <string name="action_logout">Cerrar Sesión</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="menu_preferences">&#160;&#160;Preferencias&#160;&#160;</string>
+    <string name="menu_information">&#160;&#160;Información&#160;&#160;</string>
+
+    <!-- Cadenas de apps social -->
+    <string name="facebook_app_id">1662105864092619</string>
+    <string name="facebook_provider_social">facebook</string>
+
+    <!-- Cadenas de las opciones del menu del timeline -->
+    <string name="view_profile_player">Ver Perfil</string>
+    <string name="challenge_player">Retar</string>
+    <string name="consoles_player">Consolas</string>
+    <string name="record_player">Estadísticas</string>
+
+    <!-- Cadenas del dialog del perfil -->
+    <string name="lbl_consoles_profile">Consolas:</string>
+    <string name="lbl_games_profile">Juegos:</string>
+    <string name="percentage_vicotires">Porcentaje de Victorias: 40%</string>
+    <string name="preferences_not_found">Este jugador aún no registra sus preferencias.</string>
+    <string name="matchs_not_found">Este jugador aún no tiene un historial de juegos.</string>
+    <string name="statitics_not_found">Este jugador aún no tiene estadisticas de sus juegos.</string>
+    <string name="challenges_not_found">No tienes notificaciones pendientes.</string>
+    <string name="data_not_found">Sin resultados de busqueda.</string>
+    <string name="open_challenges_not_found">Aún no hay retos abiertos.</string>
+    <string name="title_players_ids">Mis PLAYER ID</string>
+
+    <!-- Cadenas del intro -->
+    <string name="intro_image_one">
+        YA HACES PARTE DE LA RED MÁS GRANDE DE GAMERS DE FÚTBOL
+    </string>
+    <string name="intro_image_two">
+        AQUI PODRAS PARTICIPAR EN TORNEOS ONLINE DE JUEGOS DE PES Y FIFA
+    </string>
+    <string name="intro_image_three">
+        GANA GRANDES PREMIOS SUPERANDO A TUS RIVALES
+    </string>
+    <string name="title_activity_profile">Profile</string>
+
+    <!-- Cadenas de configuracion de urban airship -->
+    <string name="development_app_key">zEvpMWP9SZiigK437waCZg</string>
+    <string name="development_app_secret">kj-XKViCRM6s5zohoBZs9w</string>
+    <string name="production_app_key">zEvpMWP9SZiigK437waCZg</string>
+    <string name="production_app_secret">kj-XKViCRM6s5zohoBZs9w</string>
+    <string name="gcm_sender">287814654687</string>
+    <string name="title_activity_base_frames">BaseFrames</string>
+    <!-- Cadenas de configuracion de epayco -->
+    <string name="public_api_key">c4edff678407b6e4b55a97a0e3024438</string>
+    <string name="private_api_key">e75d3085832ae96d5a1c0158d568bb54</string>
+
+    <string name="str_all_selected">Todos</string>
+    <string-array name="titles">
+        <item>Todo</item>
+        <item>FIFA16</item>
+        <item>FIFA17</item>
+        <item>PES16</item>
+        <item>PES17</item>
+        <item>XBOX 360</item>
+        <item>XBOX ONE</item>
+        <item> PS3 </item>
+        <item> PS4 </item>
+    </string-array>
+    <string name="title_activity_chat_room">ChatRoom</string>
+
+    <!-- Cadenas de la pantalla de chat -->
+    <string name="lbl_time_back">00:00:00</string>
+    <string name="hint_chat">Escribir mensaje</string>
+    <string name="text_random">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
+    <string name="text_message_admin">En esta pantalla puedes chatear con tu rival. En la opción [+] podras encontrar las opciones para agregar un marcador al reto con tu oponente,
+        o por el contrario abandonar el reto. Recuerda que puedes apelar a un marcador que creas no es el correcto y reportar el reto para que sea solucionado por los administradores.</string>
+
+    <!-- Cadenas para la vista de pagos online -->
+    <string name="title_activity_payments">Recargas</string>
+    <string name="payments_credit_card">Tarjeta</string>
+    <string name="payments_efecty">Efectivo</string>
+    <string name="lbl_title_credit_card">Datos de la Tarjeta</string>
+    <string name="lbl_number_card">Número de Tarjeta</string>
+    <string name="lbl_expiry_month">Mes</string>
+    <string name="lbl_expiry_year">Año</string>
+    <string name="lbl_cvc">CVC</string>
+    <string name="lbl_type_doc">CC</string>
+    <string name="lbl_identification">Número Documento</string>
+    <string name="lbl_first_name_client">Nombres</string>
+    <string name="lbl_last_name_client">Apellidos</string>
+    <string name="lbl_email_client">Correo Electrónico</string>
+    <string name="lbl_telephone_client">Teléfono</string>
+    <string name="cb_save_card">Guardar Tarjeta</string>
+    <string name="lbl_amount_charge">Valor de Carga</string>
+    <string name="validate_credit_card">Siguiente</string>
+    <string name="lbl_title_efecty">Pago en Efectivo</string>
+    <string name="lbl_value_charge">Valor</string>
+    <string name="lbl_real_value_charge">Valor con descuento de pasarela</string>
+    <string name="lbl_real_charge">Valor de recarga real</string>
+
+    <string name="lbl_document">Documento:</string>
+    <string name="lbl_type_transaction">Tipo de transacción:</string>
+    <string name="lbl_epayco_reference">Referencia epayco:</string>
+    <string name="lbl_project_id">Código de proyecto:</string>
+    <string name="lbl_invoice">Factura:</string>
+    <string name="lbl_value_recharged">Saldo actual:</string>
+    <string name="lbl_coin_info">Moneda:</string>
+    <string name="lbl_state_transaction">Estado Transacción:</string>
+
+    <!-- Cadenas para la vista de retiro de dienro -->
+    <string name="title_activity_retreats">Retiros</string>
+    <string name="phone_number_retreats">Número de Celular Daviplata</string>
+    <string name="acount_number_retreats">Número de Cédula</string>
+    <string name="amount_retreats">Monto a retirar</string>
+    <string name="confirm_retreat">Solicitar\nRetiro</string>
+    <string name="cancel_retreat">Cancelar\nRetiro</string>
+
+    <!-- Cadenas para la vista de las estadisticas -->
+    <string name="lbl_title_matchs">Ultimos retos</string>
+    <string name="lbl_defeat">D</string>
+    <string name="lbl_victory">V</string>
+
+    <string name="lbl_details_pj">PJ</string>
+    <string name="lbl_details_pg">PG</string>
+    <string name="lbl_details_pp">PP</string>
+    <string name="lbl_details_gf">GF</string>
+    <string name="lbl_details_gc">GC</string>
+
+    <string name="lbl_percentage_victories">Victorias</string>
+    <string name="lbl_percentage_defeats">Derrotas</string>
+
+    <!-- Cadenas para la vista de retos reportados -->
+    <string name="title_activity_reported">Reportados</string>
+    <string name="lbl_date_reported_challenge">Jueves 3 de marzo 2017</string>
+    <string name="lbl_amount_reported_challenge">$30.000 COP</string>
+    <string name="lbl_title_report_info">Detalle del Reporte</string>
+    <string name="lbl_title_proof_reported">Envianos tus pruebas para elegir al ganador del reto</string>
+    <string name="lbl_description_reported">Descripción</string>
+    <string name="lbl_proof_report">Agrega una descripción de lo ocurrido durante el reto, tambien puedes adjuntar una imagen del marcador y un link de youtube para apoyar tu versión de los hechos</string>
+    <string name="lbl_data_not_found_reports">No tienes retos reportados.</string>
+    <string name="lbl_url_youtube">Url del video anexado</string>
+    <string name="lbl_image_from_report">Imagen de apoyo para el reporte</string>
+    <string name="lbl_attach_report">Adjuntar</string>
+    <string name="lbl_state_report">Validando</string>
+
+    <string name="lbl_data_not_found_expired">No tienes retos vencidos ni expirados por el momento.</string>
+
+    <string name="subtitle_dialog_about">¿Quiénes somos?</string>
+    <string name="text_dialog_about">Somos una compañía incentivada por las competiciones de videojuegos de futbol. A través de nuestra plataforma ofrecemos la posibilidad de competir con jugadores de todo el mundo en las sagas de FIFA y Pro Evolution Soccer buscando así convertirnos en la comunidad más grande de los amantes del deporte rey.</string>
+    <string name="social_networks_about">Siguenos en nuestras redes sociales</string>
+
+    <string name="title_activity_terms_conditions">Términos y Condiciones</string>
+    <string name="label_terms_conditions">Aceptar <b><i>Términos y Condiciones</i></b></string>
+    <string name="large_text_terms_conditions">
+        <b>Terminos y Condiciones</b>
+        \n\n
+        FUTLIFE ofrece la posibilidad de competir en línea desde un equipo móvil, esta  diseñada para jugadores de todos los niveles con la oportunidad de jugar PES o FIFA y ganar premios. Con el fin de garantizar el juego limpio, y que cada miembro sea tratado con el respeto que se merece, estas son las reglas del juego. Estos son los Términos y Condiciones de Servicio.
+        \n\n
+        <b>Encuadernación Términos y Condiciones</b>
+        \n\n
+        <b>Términos y Condiciones</b>
+        \n\n
+        Al registrarse para una cuenta y convertirse en un miembro de nuestra comunidad usted hace de su conocimiento y esta de acuerdo por la versión más actualizada de estos términos y condiciones que se puede acceder desde el Sitio. Futlife podrá modificar estos términos y condiciones en cualquier momento, sin previo aviso. Usted es responsable de revisar estos términos y condiciones periódicamente por cualquier modificación. Su uso continuo del Sitio después de tales modificaciones implica la aceptación de dichas modificaciones. Los términos adicionales pueden aplicar a su uso de los servicios, incluyendo las reglas del juego y la elegibilidad.
+        \n\n
+        FUTLIFE RESERVA EL DERECHO DE SUSPENDER INMEDIATAMENTE Y / O cerrar la cuenta de cualquier miembro QUE VIOLE ESTOS TÉRMINOS Y CONDICIONES DEL SERVICIO, EN CUALQUIER MOMENTO SIN PREVIO AVISO. Tenga en cuenta que si la cuenta de un miembro está cerrada debido a una violación de los términos y condiciones, FUTLIFE se reserva el derecho de determinar cómo se distribuirá saldo de la cuenta del miembro.
+        \n\n
+        <b>Elegibilidad y restricciones en la participación</b>
+        \n\n
+        <b>Elegibilidad</b>
+        \n\n
+        Con el fin de registrar y mantener una cuenta en el sitio, una persona debe:\n
+        \n<b>1.</b> Ser una persona física, no menor de 18 años de edad, y que ha registrado una   dirección de correo electrónico valida y de total control por parte del usuario.
+        \n<b>2.</b> Ser ciudadano o residente de un país donde los video juegos  sean legales en caso de encontrarse en un país donde no sean legales abandonar el sitio inmediatamente.
+        \n<b>3.</b> Cumplir con estos términos y condiciones en todo momento.\n
+        \n
+        <b>Información necesaria</b>
+        \n\n
+        Tras el registro y / o durante la tramitación de la transferencia de fondos en su cuenta, usted está obligado a proporcionar la siguiente información:\n
+        \n<b>*</b> Nombre de usuario : Con el cual se identificara dentro de la aplicación.
+        \n<b>*</b> Una contraseña : La cual le servirá para entrar al sitio.
+        \n<b>*</b> Su dirección de correo electrónico :El cual se validara para determinar su autenticación de ser una persona física.
+        \n<b>*</b> Fecha de nacimiento : Para determinar la edad con la que cuenta para poder entrar al sitio.
+        \n<b>*</b> Nombre completo : Para determinar su nombre como persona física.
+        \n<b>*</b> Número de teléfono : El cual no se hará publico pero sirve para realizar algún contacto entre Futlife y el usuario.\n
+        \n
+        La información proporcionada debe ser verdadera, precisa, actualizada y completa, según lo solicitado. Usted se compromete a actualizar los datos de registro para mantenerla actualizada y precisa.
+        \n\n
+        <b>Prueba de Elegibilidad</b>
+        \n\n
+        Futlife puede exigir en cualquier momento a cualquier miembro proporcionar la identificación (cedula de ciudadanía) con el fin de seguir permitiendo el acceso de dicho miembro al sitio y los servicios que se ofrecen en la plataforma, y cada miembro reconoce y acepta esta condición de su participación como una medida razonable para garantizar la seguridad del sitio.
+        \n\n
+        <b>Cuentas sólo para uso individual</b>
+        \n\n
+        Cada cuenta dentro de la aplicación solo puede ser manejada por un único usuario, este debe ser responsable de todas las obligaciones y asume el cumplimiento de estos términos y condiciones.
+        \n\n
+        <b>Consentimiento expreso para fines comerciales y Actividades Promocionales</b>
+        \n\n
+        Al registrarse dentro de la aplicación, le pedimos su consentimiento para mostrar su nombre de usuario y registros de juegos dentro de la aplicación móvil. Al aceptar cualquier recompensa de Futlife, usted esta de acuerdo en permitir a Futlife distribuir, modificar, reproducir, imprimir, publicar, mostrar públicamente, y de difusión libre de regalías a nivel mundial, en cualquier medio y en cualquier momento, su nombre, imagen, voz, imagen y / o información biográfica para propósitos promocionales.
+        \n\n
+        <b>Pasarela de pago y Daviplata</b>
+        \n\n
+        Futlife utiliza la pasarela de pago ePayco y el portal Daviplata para procesar los depósitos y retiros en y de su cuenta. Usted irrevocablemente autoriza a  Futlife  instruir tales procesadores de pago para manejar depósitos de cuentas y retiros de su cuenta según sea necesario.
+        \n\n
+        <b>Juegos</b>
+        \n\n
+        <b>Determinación de los ganadores</b>
+        \n\n
+        Los resultados y los ganadores de cada reto ofrecido en el sitio serán determinados por Futlife en caso de que estos se den como reportados, de lo contrario cada reto se definirá de acuerdo al procedimiento establecido dentro de la aplicación. Al registrarse y / o participar en cualquier reto, usted acepta que quedará vinculado por estas determinaciones.
+        \n\n
+        <b>Disputas:</b>
+        \n\n
+        Cualquier controversia presentada sin evidencia será considerada inválida.
+        \n\n
+        Disputa en el resultado del partido: Cualquier evidencia de la partida tiene que ser enviada por medio de la aplicación móvil dentro del limite de tiempo en el cual el  reto esta activo. El período de revisión es de máximo 48 horas, será utilizada por los administradores del sitio para examinar la evidencia partido y para asignar la victoria para el usuario apropiado. Cualquier reto reportado que se presentó sin pruebas se considerará no válido. Si tan sólo una de las partes presenta pruebas durante este marco de tiempo el usuario que proporciona la evidencia será considerado el ganador del partido.
+        \n\n
+        Presentación de pruebas falsas: Si un usuario envía pruebas falsas; evidencias que han sido presentadas con anterioridad o cualquier tipo de archivo que no corresponda a una evidencia real, ese usuario perderá automáticamente el partido y enfrentar un multa por fraude que corresponde al 20% del valor apostado.
+        \n\n
+        <b>Retos</b>
+        \n\n
+        Publicar un reto significa que el desafío está abierto a la aceptación de la comunidad. Usted será desafiado por otros usuarios que están registrados dentro de la aplicación. El sitio no acepta retos en nuestro propio nombre bajo ninguna circunstancia. El Sitio sólo permitirá que usted fije un reto si usted está de acuerdo con los términos y condiciones.
+        \n\n
+        <b>Reto ceptado</b>
+        \n\n
+        La aceptación de un reto indica que usted esta comprometido a jugar dicho compromiso, en caso de abandono se le dará como perdido el partido con un marcador de 3 x 0, si ambos jugadores deciden no jugar el partido deben esperar hasta la fecha limite del reto para que este se cierre y no tenga ningún costo asociado.
+        \n\n
+        <b>Fondos Cuenta</b>
+        \n\n
+        <b>Depósitos</b>
+        \n\n
+        Para participar y/o lanzar un reto dentro de la aplicación, debe tener fondos en su cuenta. Para poder recargar su cuenta usted puede usar tarjeta de crédito o efectivo, esta recarga tiene unos costos asociados que se explican en el inciso de tarifas y comisiones.
+        \n\n
+        Cualquier intento de defraudar al Sitio y / o Futlife mediante el uso de tarjetas de crédito u otros métodos de pago, sin importar el resultado, o cualquier incumplimiento por parte de usted para honrar cargos legítimos o solicitudes de pago, o la confirmación de los depósitos, se traducirá en la terminación inmediata de su cuenta.
+        \n\n
+        <b>Comisión por uso de la plataforma</b>
+        \n\n
+        Futlife tiene un costo asociado del 16% del monto total del reto que corresponde al costo por el uso de la plataforma.
+        \n\n
+        <b>Solicitudes de retiro</b>
+        \n\n
+        Los miembros pueden solicitar un retiro de fondos de su saldo disponible en su cuenta en cualquier momento, estas solicitudes se procesaran los días Lunes de cada semana (fecha de corte), aquellas solicitudes que se procesen antes del lunes se harán efectiva a mas tardar 5 días después de la fecha de corte. La cantidad mínima de retiro es de $30.000 COP, todos los retiros están sujetos a un cargo por retiro. Para solicitar su retiro usted debe crear previamente una cuenta Daviplata, puede verificar información de cómo crear una cuenta Daviplata en www.Daviplata.com.
+        \n\n
+        <b>Moneda</b>
+        \n\n
+        El jugador debe reconocer y aceptar que:\n
+        1. Que en la plataforma de la app Futlife solo realizara transacciones  (incluyendo depósitos y pagos) con la moneda Colombiana COP.\n
+        \n\n
+        <b>Derechos de propiedad intelectual protegidos</b>
+        \n\n
+        <b>Reconocimiento de los Derechos de Propiedad de la app Futlife</b>
+        \n\n
+        En el momento de registrar una cuenta en la aplicación móvil FUTLIFE. El usuario debe aceptar que todo el contenido tanto el diseño de la app, textos, imágenes, gráficos y servicios prestados en esta, es propiedad o licencia de Futlife y/o sus licenciantes. El usuario debe comprometerse a no publicar, modificar, participar en la transferencia o venta, elaborar trabajos relacionados de, o cualquier manera explotar el contenido de la aplicación.
+        \n\n
+        Lo referente a marcas comerciales, logotipos y marcas de servicio que se muestran y que forman parte del contenido de la aplicación móvil, abarcando nombres de los juegos o retos, son marcas totalmente registradas y no registradas de Futlife y / u otros. Nada de lo contenido en la aplicación móvil debe ser interpretado como concesión, por implicación, impedimento o de otro modo, de cualquier licencia o derecho a usar cualquiera de las Marcas exhibidas en la aplicación móvil sin el permiso de Futlife.
+        \n\n
+        Es de suma importancia informar que Futlife hará valer sus derechos de propiedad intelectual en toda la extensión de la ley.
+        \n\n
+        <b>Reglas de conducta del sitio</b>
+        \n\n
+        Chat entre usuarios
+        \n\n
+        Reglas de conducta:\n
+        \n<b>*</b> La aplicación móvil se reserva el derecho de prohibir temporal o permanentemente los miembros que violen estas reglas de conducta: Lenguaje obsceno, abusivo, violento, ofensivo, indecente y amenazante, estos no serán tolerados.
+        \n<b>*</b> La publicidad de cualquier tipo no está permitido en los mensajes.
+        \n<b>*</b> La información revelada en los chat de los usuarios,  se convierte en propiedad de Futlife. Es de aclarar que Futlife no se hace responsable por cualquier tipo de información que el usuario decida dar a conocer a los demás en los chats.
+        \n\n
+        <b>Terminación</b>
+        \n\n
+        <b>Cuenta Terminación</b>
+        \n\n
+        Futlife se reserva el derecho de cancelar su cuenta, limitar o prohibir su participación en cualquier reto.
+        \n\n
+        Al registrarse para una cuenta y / o participar en cualquier reto ofrecido en la aplicación móvil, usted da su consentimiento para que Futlife pueda acceder a su información de cuenta para investigar cualquier tipo de fraude que se presente en los retos u otras acusaciones de abuso. En el caso, que un usuario se le detecte algún tipo de fraude después de haber ganado el reto, a este se le debitara el saldo que obtuvo por ganar el reto y aparte este usuario será multado por la falta cometida. Y si el usuario es reincidente en este tipo de infracciones, Futlife estará en todo su derecho de inhabilitar la cuenta y en el peor de los casos cancelársela.
+        \n\n
+        <b>Terminación</b>
+        \n\n
+        El usuario puede cerrar su cuenta en cualquier momento poniéndose en contacto con Atención al cliente. Futlife responderá a su solicitud dentro de un plazo razonable, siempre y cuando continúe asumiendo la responsabilidad de toda la actividad en su cuenta hasta que el cierre se haya efectuado por nosotros.
+        \n\n
+        <b>Exclusión de garantías</b>
+        \n\n
+        EL USO DE LOS SERVICIOS ES BAJO SU PROPIO RIESGO. LOS SERVICIOS SE PROPORCIONAN "TAL CUAL" Y "SEGÚN DISPONIBILIDAD". FUTLIFE EXPRESAMENTE RECHAZA TODAS LAS GARANTÍAS DE CUALQUIER TIPO, YA SEA EXPRESA O IMPLÍCITAS, INCLUYENDO, PERO NO LIMITADO A, LAS GARANTÍAS DE COMERCIALIZACIÓN, IDONEIDAD PARA UN PROPÓSITO PARTICULAR Y NO INFRACCIÓN. FUTLIFE NO GARANTIZA QUE (I) LOS SERVICIOS CUMPLAN CON SUS NECESIDADES, (II) LOS SERVICIOS SERÁ ININTERRUMPIDO, PUNTUAL, SEGURO O LIBRE DE ERRORES, (III) LOS RESULTADOS QUE SE PUEDEN OBTENER DEL USO DE LOS SERVICIOS SERÁN EXACTOS O CONFIABLES, (IV) LA CALIDAD DE LOS PRODUCTOS, SERVICIOS O INFORMACIÓN COMPRADOS U OBTENIDOS A TRAVÉS DE LOS SERVICIOS CUMPLA CON SUS EXPECTATIVAS, (V) SUS MENSAJES, DATOS O INFORMACIÓN EN CUALQUIER FORMA O MEDIO, NO SE PERDERÁN, y (vi) CUALQUIER ERROR SERÁ CORREGIDO. CUALQUIER MATERIAL DESCARGADO U OBTENIDO A TRAVÉS DE LOS SERVICIOS SE HACE A SU CUENTA Y RIESGO Y USTED SERÁ EL ÚNICO RESPONSABLE DE CUALQUIER DAÑO A SU SISTEMA INFORMÁTICO O PÉRDIDA DE DATOS QUE RESULTE DE LA DESCARGA DE DICHO MATERIAL. NINGÚN CONSEJO O INFORMACIÓN, ORAL O ESCRITA, OBTENIDO POR USTED DE FUTLIFE, O POR MEDIO DE LOS SERVICIOS NINGUNA GARANTÍA QUE NO EXPRESAMENTE EN ESTOS TERMINOS Y CONDICONES.
+        \n\n
+        <b>Indemnización</b>
+        \n\n
+        AL REGISTRARSE Y / O PARTICIPAR EN CUALQUIERA DE LOS SERVICIOS OFRECIDOS EN EL SITIO, USTED ACEPTA INDEMNIZAR, DEFENDER Y NO PERJUDICAR A FUTLIFE Y TODOS SUS MIEMBROS RESPECTO A TODAS LAS RECLAMACIONES, COSTOS, DAÑOS, RESPONSABILIDADES Y GASTOS U OBLIGACIONES DE CUALQUIER TIPO, DERIVADOS DE O EN RELACIÓN CON EL USO O MAL USO DE LOS SERVICIOS. FUTLIFE CONSERVA EL DERECHO DE ASUMIR LA DEFENSA EXCLUSIVA Y CONTROL DE CUALQUIER RECLAMO INDEMNIZACIÓN DE APOYO, Y EN ESTOS CASOS SE COMPROMETE A COOPERAR CON NOSOTROS PARA DEFENDER CUALQUIER RECLAMO.
+        \n\n
+        <b>Hacking, Manipulación, o el acceso no autorizado</b>
+        \n\n
+        Al momento de registrar una cuenta y / o participar en cualquier reto ofrecido en la aplicación móvil, usted acepta, sin limitación de que Futlife no se hace responsable por cualquier daño, pérdida o perjuicio derivado de la piratería, manipulación o otro acceso o uso no autorizado de la aplicación  o de su cuenta. Cualquier intento de obtener acceso no autorizado a los sistemas de la aplicación  o de cualquier cuenta, la interferencia con los procedimientos o el rendimiento de la app, o deliberadamente dañar o menoscabar la plataforma está sujeta a enjuiciamiento civil y / o penal y dará lugar a la terminación inmediata de su cuenta y el decomiso del saldo.
+        \n\n
+    </string>
+
+    <string name="title_activity_expired">Expirados</string>
+    <string name="title_activity_settings">Ajustes</string>
+
+    <!-- Labels settings for Passwords -->
+    <string name="pref_change_passwords">Cambiar Contraseña</string>
+    <string name="label_old_password">Ingresa tu contraseña actual</string>
+    <string name="label_new_password">Ingresa tu nueva contraseña</string>
+    <string name="label_repeat_password">Repite tu nueva contraseña</string>
+    <string name="button_change_password">Actualizar</string>
+
+    <!-- Labels settings for Notifications -->
+    <string name="pref_header_notifications">Notificaciones</string>
+    <string name="pref_priority">Prioridad Alta</string>
+    <string name="pref_ringtone">Sonido</string>
+    <string name="pref_vibrate">Vibrar</string>
+
+    <!-- Labels for fitler -->
+    <string name="title_filter">Filtro Dinámico</string>
+    <string name="subtitle_filter">Busca jugadores por consolas o juegos</string>
+
+    <!-- Labels for feedback -->
+    <string name="title_activity_feedback">Contactanos</string>
+    <string name="lbl_email_contact">Correo Electrónico</string>
+    <string name="lbl_name_contact">Nombre de Contacto</string>
+    <string name="lbl_telephone_contact">Teléfono de Contacto</string>
+    <string name="lbl_message_contact">Dejanos tú mensaje</string>
+
+</resources>

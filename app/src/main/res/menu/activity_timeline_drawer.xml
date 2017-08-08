@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:title="@string/title_navigation">
+        <menu>
+            <item
+                android:id="@+id/action_profile"
+                android:orderInCategory="100"
+                android:title="@string/action_home"
+                android:icon="@drawable/ic_profile"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_payments"
+                android:orderInCategory="100"
+                android:title="@string/action_payments"
+                android:icon="@drawable/ic_payments"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_retiros"
+                android:orderInCategory="100"
+                android:title="@string/action_retiros"
+                android:icon="@drawable/ic_retreats"
+                app:showAsAction="never"/>
+            <item
+                android:id="@+id/action_expired"
+                android:orderInCategory="100"
+                android:title="@string/action_defeated"
+                android:icon="@drawable/ic_expired"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_reported"
+                android:orderInCategory="100"
+                android:title="@string/action_reported"
+                android:icon="@drawable/ic_reported"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_settings"
+                android:orderInCategory="100"
+                android:title="@string/action_settings"
+                android:icon="@drawable/ic_settings"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_intro"
+                android:orderInCategory="100"
+                android:title="@string/action_intro"
+                android:icon="@drawable/ic_intro"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_about"
+                android:orderInCategory="100"
+                android:title="@string/action_about"
+                android:icon="@drawable/ic_about"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_terms_conditions"
+                android:orderInCategory="100"
+                android:title="@string/action_terms_conditions"
+                android:icon="@drawable/ic_terms_conditions"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_contact"
+                android:orderInCategory="100"
+                android:title="@string/title_activity_feedback"
+                android:icon="@drawable/ic_email"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_logout"
+                android:orderInCategory="100"
+                android:title="@string/action_logout"
+                android:icon="@drawable/ic_logout"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+
+</menu>

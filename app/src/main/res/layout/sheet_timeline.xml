@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_sheet_timelin"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/icons"
+    app:layout_behavior="@string/bottom_sheet_behavior"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="64dp" >
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.percent.PercentRelativeLayout
+            android:background="@color/colorTransparent"
+            android:layout_marginBottom="8dp"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/img_avatar_user"
+                android:src="@drawable/avatar_default"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="10dp"
+                android:layout_centerVertical="true"
+                app:border_width="2dp"
+                app:border_color="@color/mdtp_neutral_pressed"
+                android:layout_width="55dp"
+                android:layout_height="55dp" />
+            <LinearLayout
+                android:id="@+id/layout_names"
+                android:orientation="vertical"
+                app:layout_widthPercent="50%"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/img_avatar_user">
+                <TextView
+                    android:id="@+id/lbl_username"
+                    android:text="@string/register_username"
+                    android:textColor="@color/primaryText"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/lbl_fullname"
+                    android:text="@string/register_fullname"
+                    android:textColor="@color/secondaryText"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <ImageButton
+                android:id="@+id/but_exit"
+                android:contentDescription="@string/app_name"
+                android:layout_alignParentEnd="true"
+                android:layout_centerHorizontal="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_menu_logout"
+                android:scaleType="centerInside"
+                android:layout_width="20dp"
+                android:layout_height="20dp" />
+        </android.support.percent.PercentRelativeLayout>
+        <View
+            android:background="@color/mdtp_done_text_color_disabled"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+        <android.support.percent.PercentRelativeLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/layout_sheet_profile"
+                android:orientation="vertical"
+                android:gravity="center"
+                app:layout_widthPercent="25%"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageButton
+                    android:id="@+id/but_view_profile"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_profile_player"
+                    android:background="@color/colorTransparent"
+                    android:padding="1dp"
+                    android:scaleType="centerInside"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp" />
+                <TextView
+                    android:id="@+id/lbl_view_profile"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/view_profile_player"
+                    android:textColor="@color/primaryText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_sheet_challenge"
+                android:layout_toEndOf="@+id/layout_sheet_profile"
+                android:orientation="vertical"
+                android:gravity="center"
+                app:layout_widthPercent="25%"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageButton
+                    android:id="@+id/but_challenge"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_challenge_player"
+                    android:background="@color/colorTransparent"
+                    android:padding="1dp"
+                    android:scaleType="centerInside"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp" />
+                <TextView
+                    android:id="@+id/lbl_challenge"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/challenge_player"
+                    android:textColor="@color/primaryText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_sheet_consoles"
+                android:layout_toEndOf="@+id/layout_sheet_challenge"
+                android:orientation="vertical"
+                android:gravity="center"
+                app:layout_widthPercent="25%"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageButton
+                    android:id="@+id/but_consoles"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_consoles_player"
+                    android:background="@color/colorTransparent"
+                    android:padding="1dp"
+                    android:scaleType="centerInside"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp" />
+                <TextView
+                    android:id="@+id/lbl_consoles"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/consoles_player"
+                    android:textColor="@color/primaryText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_sheet_games"
+                android:layout_toEndOf="@+id/layout_sheet_consoles"
+                android:orientation="vertical"
+                android:gravity="center"
+                app:layout_widthPercent="25%"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageButton
+                    android:id="@+id/but_record"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_record_player"
+                    android:background="@color/colorTransparent"
+                    android:padding="1dp"
+                    android:scaleType="centerInside"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp" />
+                <TextView
+                    android:id="@+id/lbl_games"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/record_player"
+                    android:textColor="@color/primaryText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+        </android.support.percent.PercentRelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

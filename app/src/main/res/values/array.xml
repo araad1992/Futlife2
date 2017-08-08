@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="labels">
+        <item>@drawable/background_label_preferences</item>
+        <item>@drawable/background_label_information</item>
+    </array>
+
+    <array name="colors">
+        <item>@color/color_errors</item>
+        <item>@color/color_info</item>
+    </array>
+</resources>

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "287814654687",
+    "firebase_url": "https://futlife-dc511.firebaseio.com",
+    "project_id": "futlife-dc511",
+    "storage_bucket": "futlife-dc511.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:287814654687:android:1db37177d7c40b79",
+        "android_client_info": {
+          "package_name": "com.ideamosweb.futlife"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "287814654687-kmliulp5u0j1l3smgqjorc2f56j5ne1p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ideamosweb.futlife",
+            "certificate_hash": "EBA19F2FCAC7E2D65889D388302F41891057F14A"
+          }
+        },
+        {
+          "client_id": "287814654687-0fdp7fhj9vbjt5d72qi3iho5lprq4iqd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB00KvsmQXUxtDrgfAW7omgIsJ1GY2jgWs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "287814654687-0fdp7fhj9vbjt5d72qi3iho5lprq4iqd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
