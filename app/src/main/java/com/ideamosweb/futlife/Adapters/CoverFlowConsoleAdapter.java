@@ -55,12 +55,12 @@ public class CoverFlowConsoleAdapter extends PagerAdapter {
         return view;
     }
 
-    public void setupAdapter(){
+    private void setupAdapter(){
         userController = new UserController(context);
         preferenceController = new PreferenceController(context);
     }
 
-    public void setupOptionsCard(CardView card_console, final AnimateCheckBox checkbox){
+    private void setupOptionsCard(CardView card_console, final AnimateCheckBox checkbox){
         card_console.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,35 +73,33 @@ public class CoverFlowConsoleAdapter extends PagerAdapter {
         });
     }
 
-    public void setupStateConsole(AnimateCheckBox checkbox, int position){
-        ConsolePreference console = preferenceController.existConsole(consoles.get(position).getConsole_id());
+    private void setupStateConsole(AnimateCheckBox checkbox, int position){
+        ConsolePreference console = preferenceController.existConsole(userController.show().getUser_id(), consoles.get(position).getConsole_id());
         if(console != null){
             boolean active = console.getActive();
             if(active) {
                 checkbox.setChecked(true);
+            } else {
+                checkbox.setChecked(false);
             }
         }
     }
 
-    public void setupCheckedConsole(AnimateCheckBox checkbox, final int position){
+    private void setupCheckedConsole(AnimateCheckBox checkbox, final int position){
         final ConsoleController consoleController = new ConsoleController(context);
         checkbox.setOnCheckedChangeListener(new AnimateCheckBox.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(View buttonView, boolean isChecked) {
                 Console console = consoles.get(position);
-                if(isChecked) {
-                    setConsolePreference(console, true);
-                } else {
-                    setConsolePreference(console, false);
-                }
+                setConsolePreference(console, isChecked);
                 consoleController.update(console);
                 buildListConsoles();
             }
         });
     }
 
-    public void setConsolePreference(Console console, boolean active){
-        ConsolePreference preference = preferenceController.existConsole(console.getConsole_id());
+    private void setConsolePreference(Console console, boolean active){
+        ConsolePreference preference = preferenceController.existConsole(userController.show().getUser_id(), console.getConsole_id());
         if(preference == null) {
             preference = new ConsolePreference();
             preference.setUser_id(userController.show().getUser_id());
@@ -117,7 +115,7 @@ public class CoverFlowConsoleAdapter extends PagerAdapter {
         System.out.println(preference.toString());
     }
 
-    public void setupImageConsole(ImageView img_console, int position){
+    private void setupImageConsole(ImageView img_console, int position){
         Picasso.with(context)
                 .load(consoles.get(position).getAvatar())
                 .fit()
@@ -127,7 +125,7 @@ public class CoverFlowConsoleAdapter extends PagerAdapter {
         img_console.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
     }
 
-    public void buildListConsoles(){
+    private void buildListConsoles(){
         List<ConsolePreference> preferences = preferenceController.consoles(userController.show().getUser_id());
         linearLayout.removeAllViews();
         if(!preferences.isEmpty()){

@@ -794,11 +794,11 @@ public class ChatRoom extends AppCompatActivity {
                 dialog.cancelProgress();
                 String message = jsonObject.get("message").getAsString();
                 if(success) {
-                    JsonObject json_challenge = jsonObject.get("challenge").getAsJsonObject();
-                    Challenge challenge_update = new Gson().fromJson(json_challenge, Challenge.class);
-                    challenge_update.setCode(challenge.getCode());
-                    challengeController.update(challenge_update);
-                    toast.toastSuccess(message);
+                    //JsonObject json_challenge = jsonObject.get("challenge").getAsJsonObject();
+                    //Challenge challenge_update = new Gson().fromJson(json_challenge, Challenge.class);
+                    //challenge_update.setCode(challenge.getCode());
+                    //challengeController.update(challenge_update);
+                    //toast.toastSuccess(message);
                     finish();
                 } else {
                     toast.toastWarning("Error al enviar respuesta");

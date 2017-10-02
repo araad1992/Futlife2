@@ -236,7 +236,7 @@ public class Payments extends AppCompatActivity {
         auth.setApiKey(getString(R.string.public_api_key));
         auth.setPrivateKey(getString(R.string.private_api_key));
         auth.setLang("ES");
-        auth.setTest(false);
+        auth.setTest(true);
         epayco = new Epayco(auth);
     }
 

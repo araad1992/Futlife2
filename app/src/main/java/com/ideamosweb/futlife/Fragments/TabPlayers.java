@@ -17,13 +17,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.ideamosweb.futlife.Adapters.RowRecyclerPlayerAdapter;
-import com.ideamosweb.futlife.Controllers.PlayerController;
-import com.ideamosweb.futlife.Controllers.PreferenceController;
 import com.ideamosweb.futlife.Controllers.UserController;
-import com.ideamosweb.futlife.Models.ConsolePreference;
-import com.ideamosweb.futlife.Models.GamePreference;
 import com.ideamosweb.futlife.Models.Player;
 import com.ideamosweb.futlife.Models.User;
 import com.ideamosweb.futlife.R;
@@ -34,6 +29,7 @@ import com.ideamosweb.futlife.Utils.MaterialDialog;
 import com.ideamosweb.futlife.Utils.ToastMessages;
 import com.ideamosweb.futlife.Utils.Utils;
 import com.squareup.otto.Subscribe;
+import java.util.ArrayList;
 import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -48,13 +44,16 @@ import retrofit.client.Response;
  */
 public class TabPlayers extends Fragment {
 
+    //Componentes
     private Context context;
     private UserController userController;
-    private PlayerController playerController;
-    private PreferenceController preferenceController;
     private MaterialDialog dialog;
     private ToastMessages toast;
     private Utils utils;
+
+    //Elementos de control
+    private RowRecyclerPlayerAdapter adapter;
+    private List<Player> players;
 
     //Elementos
     @Bind(R.id.recycler_players)
@@ -63,6 +62,7 @@ public class TabPlayers extends Fragment {
     SwipeRefreshLayout swipe_refresh;
     @Bind(R.id.lbl_data_not_found)
     TextView lbl_data_not_found;
+
 
     public static TabPlayers newInstance() {
         return new TabPlayers();
@@ -97,30 +97,32 @@ public class TabPlayers extends Fragment {
 
     @Subscribe
     public void recievedChallenge(MessageBusSearch messageBusSearch){
-        boolean active = messageBusSearch.isActive();
-        String keyword = messageBusSearch.search();
-        if(active) {
-            if(!keyword.equalsIgnoreCase("")) {
-                resultsInRecycler(keyword);
-            }
-        } else {
-            List<Player> players = playerController.get();
-            setupRecycler(players);
-        }
+        //boolean active = messageBusSearch.isActive();
+        //String keyword = messageBusSearch.search();
+        //if(active) {
+        //    if(!keyword.equalsIgnoreCase("")) {
+        //        resultsInRecycler(keyword);
+        //    }
+        //} else {
+        //    List<Player> players = playerController.get();
+        //    setupRecycler(players, false);
+        //}
     }
 
     public void setupActivity(){
         context = this.getContext();
         userController = new UserController(context);
-        playerController = new PlayerController(context);
-        preferenceController = new PreferenceController(context);
         dialog = new MaterialDialog(context);
         toast = new ToastMessages(context);
         utils = new Utils(context);
+
+        adapter = null;
+        players = new ArrayList<>();
+        swipe_refresh.setRefreshing(true);
+        getPlayers(true);
         setupSwipeRefresh();
         setupLabelNotFound();
-        List<Player> players = playerController.get();
-        setupRecycler(players);
+        configureRecyclerView();
     }
 
     public void setupSwipeRefresh(){
@@ -150,33 +152,45 @@ public class TabPlayers extends Fragment {
         }
     }
 
-    public void setupRecycler(List<Player> players){
+    private void configureRecyclerView() {
+        recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if(dy > 0) {
+                    swipe_refresh.setRefreshing(true);
+                    getPlayers(true);
+                }
+            }
+        });
+    }
+
+    public void setupRecycler(boolean flag){
         recycler.removeAllViewsInLayout();
-        RowRecyclerPlayerAdapter adapter = new RowRecyclerPlayerAdapter(context, players);
+        adapter = new RowRecyclerPlayerAdapter(context, players);
         recycler.setLayoutManager(
                 new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
         );
         recycler.setAdapter(adapter);
-        recycler.setHasFixedSize(true);
+        recycler.setHasFixedSize(false);
+        if(flag) recycler.scrollToPosition(players.size() - 1);
         recycler.setVisibility(View.VISIBLE);
     }
 
-    public void resultsInRecycler(String keyword){
-        List<Player> players = playerController.search(keyword);
-        if(players.isEmpty()) {
-            recycler.setVisibility(View.GONE);
-            lbl_data_not_found.setVisibility(View.VISIBLE);
-        } else {
-            recycler.setVisibility(View.VISIBLE);
-            lbl_data_not_found.setVisibility(View.GONE);
-            RowRecyclerPlayerAdapter adapter = new RowRecyclerPlayerAdapter(context, players);
-            recycler.setLayoutManager(
-                    new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
-            );
-            recycler.setAdapter(adapter);
-            recycler.setHasFixedSize(true);
-        }
-    }
+    //public void resultsInRecycler(String keyword){
+    //    if(players.isEmpty()) {
+    //        recycler.setVisibility(View.GONE);
+    //        lbl_data_not_found.setVisibility(View.VISIBLE);
+    //    } else {
+    //        recycler.setVisibility(View.VISIBLE);
+    //        lbl_data_not_found.setVisibility(View.GONE);
+    //        RowRecyclerPlayerAdapter adapter = new RowRecyclerPlayerAdapter(context, players);
+    //        recycler.setLayoutManager(
+    //                new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+    //        );
+    //        recycler.setAdapter(adapter);
+    //        recycler.setHasFixedSize(true);
+    //    }
+    //}
 
 //*********************************** Metodos asincronicos ***********************************//
 
@@ -184,21 +198,22 @@ public class TabPlayers extends Fragment {
         User user = userController.show();
         String token = "Bearer " + user.getToken();
         int user_id = user.getUser_id();
+        int skip = players.size();
         final String url = getString(R.string.url_api);
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(url)
                 .build();
         Api api = restAdapter.create(Api.class);
-        api.getUsers(token, user_id, new Callback<JsonObject>() {
+        api.getUsers(token, user_id, skip, new Callback<JsonObject>() {
             @Override
             public void success(JsonObject jsonObject, Response response) {
                 boolean success = jsonObject.get("success").getAsBoolean();
                 if (success) {
                     JsonArray data = jsonObject.getAsJsonArray("data");
-                    savePlayers(data);
+                    processPlayers(data, flag);
                 }
-                if(flag) swipe_refresh.setRefreshing(false);
+                if(flag)swipe_refresh.setRefreshing(false);
             }
             @Override
             public void failure(RetrofitError error) {
@@ -220,11 +235,9 @@ public class TabPlayers extends Fragment {
         } else {
             int status = retrofitError.getResponse().getStatus();
             if(status == 400) {
-                String error = retrofitError.getBody().toString();
-                JsonParser parser = new JsonParser();
-                JsonObject jsonErrors = (JsonObject)parser.parse(error);
-                String message = jsonErrors.get("error").getAsString();
-                dialog.dialogWarnings("¡Alerta!", message);
+                String message = "No hay más jugadores";
+                System.out.println(message);
+                //toast.toastWarning(message);
             } else {
                 String message = retrofitError.getMessage();
                 dialog.dialogErrors("Error " + status, message);
@@ -232,23 +245,15 @@ public class TabPlayers extends Fragment {
         }
     }
 
-    public void savePlayers(JsonArray array){
+    public void processPlayers(JsonArray array, boolean flag) {
         try {
             if(array.size() > 0) {
                 for (int i = 0; i < array.size(); i++) {
                     JsonObject json = array.get(i).getAsJsonObject();
                     Player player = new Gson().fromJson(json, Player.class);
-                    if(playerController.create(player) == 1){
-                        if(json.has("preferences")){
-                            int user_id = player.getUser_id();
-                            JsonArray preferences = json.getAsJsonArray("preferences");
-                            savePreferencesPlayers(preferences, user_id);
-                        }
-                        System.out.println(player.toString());
-                    }
+                    players.add(player);
                 }
-                List<Player> players = playerController.get();
-                setupRecycler(players);
+                setupRecycler(flag);
                 toast.toastSuccess("Jugadores cargados...");
             } else {
                 toast.toastWarning("Sin jugadores disponibles...");
@@ -257,46 +262,5 @@ public class TabPlayers extends Fragment {
             Log.e("TabPlayers(savePlayers)", "Error ex: " + e.getMessage());
         }
     }
-
-    public void savePreferencesPlayers(JsonArray array, int user_id){
-        try {
-            if(array.size() > 0) {
-                for (int i = 0; i < array.size(); i++) {
-                    JsonObject preference = array.get(i).getAsJsonObject();
-                    JsonObject json_console = preference.getAsJsonObject("console");
-                    int preference_id = preference.get("id").getAsInt();
-                    String player_id = "";
-                    if(!preference.get("player_id").isJsonNull()){
-                        player_id = preference.get("player_id").getAsString();
-                    }
-                    ConsolePreference console = new Gson().fromJson(json_console, ConsolePreference.class);
-                    console.setPreference_id(preference_id);
-                    console.setUser_id(user_id);
-                    console.setPlayer_id(player_id);
-                    if(preferenceController.create(console)){
-                        System.out.println("consola: " + console.toString());
-                        JsonArray array_games = preference.getAsJsonArray("games");
-                        for (int j = 0; j < array_games.size(); j++) {
-                            JsonObject json_game = array_games.get(j).getAsJsonObject();
-                            GamePreference game = new Gson().fromJson(json_game, GamePreference.class);
-                            game.setUser_id(user_id);
-                            game.setConsole_id(console.getConsole_id());
-                            if(preferenceController.create(game)) {
-                                System.out.println("juegos:" + game.toString());
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (JsonIOException e){
-            Log.e("Timeline(savePreferencesPlayers)", "Error ex: " + e.getMessage());
-        }
-    }
-
-//region Filtro de busqueda por items
-
-
-
-//endregion
 
 }

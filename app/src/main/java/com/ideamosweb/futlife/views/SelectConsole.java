@@ -28,6 +28,7 @@ public class SelectConsole extends Activity {
     private ConsoleController consoleController;
     private PreferenceController preferenceController;
     private MaterialDialog dialog;
+    private boolean is_edit;
 
     //Elementos de la vista
     @Bind(R.id.lbl_title)TextView lbl_title;
@@ -49,8 +50,18 @@ public class SelectConsole extends Activity {
         consoleController = new ConsoleController(context);
         preferenceController = new PreferenceController(context);
         dialog = new MaterialDialog(context);
+        is_edit = false;
+        getParameters();
         setupLabels();
         setupPagerContainer();
+    }
+
+    public void getParameters() {
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null) {
+            is_edit = bundle.getBoolean("is_edit");
+            System.out.println("is_edit: " + is_edit);
+        }
     }
 
     @Override
@@ -81,7 +92,11 @@ public class SelectConsole extends Activity {
             dialog.dialogWarnings("¡Alto!",
                     "Antes de avanzar, debes seleccionar al menos una consola.");
         } else {
-            startActivity(new Intent(SelectConsole.this, SelectGame.class));
+            Intent intent = new Intent(SelectConsole.this, SelectGame.class);
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("is_edit", is_edit);
+            intent.putExtras(bundle);
+            startActivity(intent);
             overridePendingTransition(R.anim.slide_open_translate, R.anim.slide_close_scale);
             finish();
         }

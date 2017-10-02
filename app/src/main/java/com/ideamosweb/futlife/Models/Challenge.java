@@ -1,61 +1,45 @@
 package com.ideamosweb.futlife.Models;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * Creado por Deimer Villa on 23/03/17.
  * Función:
  */
-@DatabaseTable(tableName = "challenges")
 public class Challenge {
 
-    @Expose(serialize = false, deserialize = false)
-    @DatabaseField(generatedId = true)
-    private int code;
-
     @SerializedName("id")
-    @DatabaseField(canBeNull = false)
     private int challenge_id;
-    @DatabaseField(canBeNull = false)
     private int player_one;
-    @DatabaseField(canBeNull = true)
     private int player_two;
-    @DatabaseField(canBeNull = true)
     private int score_player_one;
-    @DatabaseField(canBeNull = true)
     private int score_player_two;
-    @DatabaseField(canBeNull = false)
     private int console_id;
-    @DatabaseField(canBeNull = false)
     private int game_id;
-    @DatabaseField(canBeNull = false)
     private float amount_bet;
-    @DatabaseField(canBeNull = false)
     private float initial_value;
-    @DatabaseField(canBeNull = false, defaultValue = "true")
     private String deadline;
-    @DatabaseField(canBeNull = false, defaultValue = "normal")
     private String state;
-    @DatabaseField(canBeNull = false)
     private String type;
-    @DatabaseField(canBeNull = false)
     private boolean visible_one;
-    @DatabaseField(canBeNull = false)
     private boolean visible_two;
-    @DatabaseField(canBeNull = false)
     private boolean read;
-    @DatabaseField(canBeNull = false)
     private String updated_at;
+    private String username_one;
+    private String username_two;
+    private String name_one;
+    private String name_two;
+    private String avatar_one;
+    private String avatar_two;
 
+//region Constructores
     public Challenge() {}
-
     public Challenge(int challenge_id, int player_one, int player_two, int score_player_one,
                      int score_player_two, int console_id, int game_id, float amount_bet,
                      float initial_value, String deadline, String state, String type,
-                     boolean visible_one, boolean visible_two, boolean read, String updated_at) {
+                     boolean visible_one, boolean visible_two, boolean read, String updated_at,
+                     String username_one, String username_two, String name_one, String name_two,
+                     String avatar_one, String avatar_two) {
         this.challenge_id = challenge_id;
         this.player_one = player_one;
         this.player_two = player_two;
@@ -72,12 +56,16 @@ public class Challenge {
         this.visible_two = visible_two;
         this.read = read;
         this.updated_at = updated_at;
+        this.username_one = username_one;
+        this.username_two = username_two;
+        this.name_one = name_one;
+        this.name_two = name_two;
+        this.avatar_one = avatar_one;
+        this.avatar_two = avatar_two;
     }
+//endregion
 
 //region Getters del modelo
-    public int getCode() {
-        return code;
-    }
     public int getChallenge_id() {
         return challenge_id;
     }
@@ -126,12 +114,27 @@ public class Challenge {
     public String getUpdated_at() {
         return updated_at;
     }
-//endregion
+    public String getUsername_one() {
+        return username_one;
+    }
+    public String getUsername_two() {
+        return username_two;
+    }
+    public String getName_one() {
+        return name_one;
+    }
+    public String getName_two() {
+        return name_two;
+    }
+    public String getAvatar_one() {
+        return avatar_one;
+    }
+    public String getAvatar_two() {
+        return avatar_two;
+    }
+    //endregion
 
 //region Setters del modelo
-    public void setCode(int code) {
-        this.code = code;
-    }
     public void setChallenge_id(int challenge_id) {
         this.challenge_id = challenge_id;
     }
@@ -180,30 +183,53 @@ public class Challenge {
     public void setUpdated_at(String updated_at) {
         this.updated_at = updated_at;
     }
-//endregion
+    public void setUsername_one(String username_one) {
+        this.username_one = username_one;
+    }
+    public void setUsername_two(String username_two) {
+        this.username_two = username_two;
+    }
+    public void setName_one(String name_one) {
+        this.name_one = name_one;
+    }
+    public void setName_two(String name_two) {
+        this.name_two = name_two;
+    }
+    public void setAvatar_one(String avatar_one) {
+        this.avatar_one = avatar_one;
+    }
+    public void setAvatar_two(String avatar_two) {
+        this.avatar_two = avatar_two;
+    }
+    //endregion
 
 //region Funcion para imprimir el objeto
     @Override
     public String toString() {
         return "Challenge{" +
-            "code=" + code +
-            ", challenge_id=" + challenge_id +
-            ", player_one=" + player_one +
-            ", player_two=" + player_two +
-            ", score_player_one=" + score_player_one +
-            ", score_player_two=" + score_player_two +
-            ", console_id=" + console_id +
-            ", game_id=" + game_id +
-            ", amount_bet=" + amount_bet +
-            ", initial_value=" + initial_value +
-            ", deadline='" + deadline + '\'' +
-            ", state='" + state + '\'' +
-            ", type='" + type + '\'' +
-            ", visible_one=" + visible_one +
-            ", visible_two=" + visible_two +
-            ", read=" + read +
-            ", updated_at='" + updated_at + '\'' +
-        '}';
+                "challenge_id=" + challenge_id +
+                ", player_one=" + player_one +
+                ", player_two=" + player_two +
+                ", score_player_one=" + score_player_one +
+                ", score_player_two=" + score_player_two +
+                ", console_id=" + console_id +
+                ", game_id=" + game_id +
+                ", amount_bet=" + amount_bet +
+                ", initial_value=" + initial_value +
+                ", deadline='" + deadline + '\'' +
+                ", state='" + state + '\'' +
+                ", type='" + type + '\'' +
+                ", visible_one=" + visible_one +
+                ", visible_two=" + visible_two +
+                ", read=" + read +
+                ", updated_at='" + updated_at + '\'' +
+                ", username_one='" + username_one + '\'' +
+                ", username_two='" + username_two + '\'' +
+                ", name_one='" + name_one + '\'' +
+                ", name_two='" + name_two + '\'' +
+                ", avatar_one='" + avatar_one + '\'' +
+                ", avatar_two='" + avatar_two + '\'' +
+                '}';
     }
 //endregion
 

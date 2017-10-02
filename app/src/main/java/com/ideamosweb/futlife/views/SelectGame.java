@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.ideamosweb.futlife.Adapters.CoverFlowGameAdapter;
 import com.ideamosweb.futlife.Controllers.GameController;
 import com.ideamosweb.futlife.Controllers.PreferenceController;
+import com.ideamosweb.futlife.Controllers.UserController;
 import com.ideamosweb.futlife.Models.Game;
 import com.ideamosweb.futlife.R;
 import com.ideamosweb.futlife.Utils.CustPagerTransformer;
@@ -24,9 +25,11 @@ public class SelectGame extends Activity {
 
     //Iniciadores
     private Context context;
+    private UserController userController;
     private GameController gameController;
     private PreferenceController preferenceController;
     private MaterialDialog dialog;
+    private boolean is_edit;
 
     //Elementos de la vista
     @Bind(R.id.lbl_title)TextView lbl_title;
@@ -43,11 +46,22 @@ public class SelectGame extends Activity {
 
     public void setupActivity(){
         context = this;
+        userController = new UserController(context);
         gameController = new GameController(context);
         preferenceController = new PreferenceController(context);
         dialog = new MaterialDialog(context);
+        is_edit = false;
+        getParameters();
         setupLabels();
         setupPagerContainer();
+    }
+
+    public void getParameters() {
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null) {
+            is_edit = bundle.getBoolean("is_edit");
+            System.out.println("is_edit: " + is_edit);
+        }
     }
 
     public void setupLabels(){
@@ -67,11 +81,15 @@ public class SelectGame extends Activity {
 
     @OnClick(R.id.fab_next)
     public void next(){
-        if(!preferenceController.stockGames()) {
+        if(!preferenceController.stockGames(userController.show().getUser_id())) {
             dialog.dialogWarnings("¡Alto!",
                     "Antes de avanzar, debes seleccionar al menos un juego.");
         } else {
-            startActivity(new Intent(SelectGame.this, Summary.class));
+            Intent intent = new Intent(SelectGame.this, Summary.class);
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("is_edit", is_edit);
+            intent.putExtras(bundle);
+            startActivity(intent);
             overridePendingTransition(R.anim.slide_open_translate, R.anim.slide_close_scale);
             finish();
         }

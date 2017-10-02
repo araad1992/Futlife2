@@ -215,11 +215,12 @@ public class CoverFlowGameAdapter extends PagerAdapter {
     }
 
     public void setGamePreference(Game game, int console_id, boolean active){
-        GamePreference preference = preferenceController.existGame(game.getGame_id(), console_id);
+        int user_id = userController.show().getUser_id();
+        GamePreference preference = preferenceController.existGame(game.getGame_id(), console_id, user_id);
         if(preference == null) {
             preference = new GamePreference();
             preference.setGame_id(game.getGame_id());
-            preference.setUser_id(userController.show().getUser_id());
+            preference.setUser_id(user_id);
             preference.setConsole_id(console_id);
             preference.setName(game.getName());
             preference.setYear(game.getYear());

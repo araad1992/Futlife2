@@ -213,7 +213,7 @@ public class FrameNotifications extends Fragment {
             public void onClick(View v) {
                 Intent profile = new Intent(getActivity(), Profile.class);
                 profile.putExtra("tab_select", 0);
-                profile.putExtra("code", player.getCode());
+                profile.putExtra("user_id", player.getUser_id());
                 profile.putExtra("principal", false);
                 startActivity(profile);
             }

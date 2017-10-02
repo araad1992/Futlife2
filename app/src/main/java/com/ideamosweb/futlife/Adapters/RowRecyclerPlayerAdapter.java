@@ -76,7 +76,7 @@ public class RowRecyclerPlayerAdapter extends RecyclerView.Adapter<RowRecyclerPl
                 activity.startActivity(
                         new Intent(context, Profile.class)
                                 .putExtra("tab_select", 0)
-                                .putExtra("code", player.getCode())
+                                .putExtra("user_id", player.getUser_id())
                                 .putExtra("principal", false));
                 activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }

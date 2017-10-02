@@ -88,12 +88,12 @@ public class PreferenceController {
         return res;
     }
 
-    public boolean stockGames(){
+    public boolean stockGames(int user_id){
         boolean res = false;
         try {
             helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
             RuntimeExceptionDao<GamePreference, Integer> preferenceDao = helper.getGamePreferenceRuntimeDao();
-            res = preferenceDao.queryBuilder().where().eq("active", true).query().size() > 0;
+            res = preferenceDao.queryBuilder().where().eq("active", true).and().eq("user_id", user_id).query().size() > 0;
         } catch (Exception ex) {
             Log.e("PreferenceController(stockGames)", "Error: " + ex.getMessage());
         }
@@ -117,7 +117,7 @@ public class PreferenceController {
         return player_id;
     }
 
-    public ConsolePreference existConsole(int console_id){
+    public ConsolePreference existConsole(int user_id, int console_id){
         ConsolePreference preference;
         try {
             helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
@@ -125,6 +125,7 @@ public class PreferenceController {
             List<ConsolePreference> consoles = preferenceDao
                     .queryBuilder()
                     .where().eq("console_id", console_id)
+                    .and().eq("user_id", user_id)
                     .query();
             if(consoles.isEmpty()){
                 preference = null;
@@ -214,7 +215,7 @@ public class PreferenceController {
         return preferences;
     }
 
-    public GamePreference existGame(int game_id, int console_id){
+    public GamePreference existGame(int game_id, int console_id, int user_id){
         GamePreference preference;
         try {
             helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
@@ -222,6 +223,7 @@ public class PreferenceController {
             List<GamePreference> games = preferenceDao.queryBuilder()
                     .where().eq("game_id", game_id)
                     .and().eq("console_id", console_id)
+                    .and().eq("user_id", user_id)
                     .query();
             if (games.isEmpty( )) {
                 preference = null;
@@ -415,12 +417,12 @@ public class PreferenceController {
         return res;
     }
 
-    public boolean clearConsolePreference(){
+    public boolean clearConsolePreference(int user_id){
         boolean res = true;
         try {
             helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
             RuntimeExceptionDao<ConsolePreference, Integer> preferenceDao = helper.getConsolePreferenceRuntimeDao();
-            List<ConsolePreference> consoles = preferenceDao.queryForAll();
+            List<ConsolePreference> consoles = preferenceDao.queryForEq("user_id", user_id);
             preferenceDao.delete(consoles);
         } catch (Exception ex) {
             res = false;
@@ -429,12 +431,12 @@ public class PreferenceController {
         return res;
     }
 
-    public boolean clearGamePreference(){
+    public boolean clearGamePreference(int user_id){
         boolean res = true;
         try {
             helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
             RuntimeExceptionDao<GamePreference, Integer> preferenceDao = helper.getGamePreferenceRuntimeDao();
-            List<GamePreference> games = preferenceDao.queryForAll();
+            List<GamePreference> games = preferenceDao.queryForEq("user_id", user_id);
             preferenceDao.delete(games);
         } catch (Exception ex) {
             res = false;

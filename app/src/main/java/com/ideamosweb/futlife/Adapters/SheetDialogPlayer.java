@@ -173,7 +173,7 @@ public class SheetDialogPlayer extends BottomSheetDialogFragment {
         activity.startActivity(
                 new Intent(getContext(), Profile.class)
                         .putExtra("tab_select", tab_select)
-                        .putExtra("code", player.getCode())
+                        .putExtra("user_id", player.getUser_id())
                         .putExtra("principal", false));
         activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         dismiss();

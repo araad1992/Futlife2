@@ -143,7 +143,7 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
         if(player != null) {
             loadAvatarPlayer(holder.avatar_player_1, player.getThumbnail());
             setTypeFaceUsername(holder.lbl_player_1, player.getUsername());
-            clickCardDetails(holder.avatar_player_1, player.getCode(), false);
+            clickCardDetails(holder.avatar_player_1, player.getUser_id(), false);
         } else {
             User user = userController.show();
             loadAvatarPlayer(holder.avatar_player_1, user.getThumbnail());

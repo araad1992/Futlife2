@@ -77,17 +77,18 @@ public interface Api {
 //endregion
 
 //region Users
-    @GET("/players/{id}")
+    @GET("/players/{user_id}/{skip}")
     void getUsers(
             @Header("Authorization") String token,
-            @Path("id")int user_id,
+            @Path("user_id") int user_id,
+            @Path("skip") int skip,
             Callback<JsonObject> cb
     );
 
-    @GET("/players/{id}/show")
+    @GET("/users/{user_id}/get")
     void showPlayer(
             @Header("Authorization") String token,
-            @Path("id")int user_id,
+            @Path("user_id")int user_id,
             Callback<JsonObject> cb
     );
 

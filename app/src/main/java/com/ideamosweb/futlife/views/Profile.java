@@ -60,7 +60,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.ideamosweb.futlife.Controllers.PlayerController;
 import com.ideamosweb.futlife.Models.Player;
 import com.ideamosweb.futlife.R;
 import com.squareup.okhttp.OkHttpClient;
@@ -98,7 +97,6 @@ public class Profile extends AppCompatActivity implements
 
     private Context context;
     private UserController userController;
-    private PlayerController playerController;
     private PreferenceController preferenceController;
     private ChallengeController challengeController;
     private RechargeController rechargeController;
@@ -134,7 +132,6 @@ public class Profile extends AppCompatActivity implements
     @Bind(R.id.fab_edit_avatar)FloatingActionButton fab_edit_avatar;
     @Bind(R.id.fab)FloatingActionButton fab;
     @Bind(R.id.fab_menu)FabSpeedDial fab_menu;
-
     @Bind(R.id.avatar_profile)CircleImageView avatar_profile;
     @Bind(R.id.lbl_username_player)TextView lbl_username_player;
     @Bind(R.id.lbl_fullname_player)TextView lbl_fullname_player;
@@ -151,7 +148,6 @@ public class Profile extends AppCompatActivity implements
     public void setupActivity(){
         context = this;
         userController = new UserController(context);
-        playerController = new PlayerController(context);
         preferenceController = new PreferenceController(context);
         challengeController = new ChallengeController(context);
         rechargeController = new RechargeController(context);
@@ -165,7 +161,6 @@ public class Profile extends AppCompatActivity implements
         flag_avatar = false;
         getExtras();
         setupAppBarLayout();
-        setupToolbar();
         setupLoadAvatar();
         setupFab();
         setupFabMenu();
@@ -175,16 +170,33 @@ public class Profile extends AppCompatActivity implements
         Bundle extras = getIntent().getExtras();
         tab_select = extras.getInt("tab_select");
         principal = extras.getBoolean("principal");
-        int code = extras.getInt("code");
+        int player_id = extras.getInt("user_id");
         user = userController.show();
-        System.out.println(user);
         if(principal) {
+            setupToolbar();
             setupDataUser();
         } else {
             fab_edit_avatar.setVisibility(View.GONE);
-            player = playerController.show(code);
-            setupDataPlayer();
+            getPlayer(player_id);
         }
+    }
+
+    public String setDataPlayerFull(){
+        String full_data;
+        if(principal) {
+            if(user.getCity_name().equalsIgnoreCase("no-data")){
+                full_data = user.getName();
+            } else {
+                full_data = user.getName() + " • " + user.getCity_name();
+            }
+        } else {
+            if(player.getCity_name() == null || player.getCity_name().isEmpty() || player.getCity_name().equalsIgnoreCase("no-data")){
+                full_data = player.getName();
+            } else {
+                full_data = player.getName() + " • " + player.getCity_name();
+            }
+        }
+        return full_data;
     }
 
     public void setupFab(){
@@ -267,7 +279,7 @@ public class Profile extends AppCompatActivity implements
         }
     }
 
-//region gestión del avatar de usuario
+//region usuario local
 
     public void setupLoadAvatar(){
         EasyImage.configuration(context)
@@ -510,65 +522,20 @@ public class Profile extends AppCompatActivity implements
         setupTabLayout();
     }
 
-    public void setupDataPlayer(){
-        Typeface bebas_bold = Typeface.createFromAsset(getAssets(), "fonts/bebas_neue_bold.ttf");
-        Typeface bebas_regular = Typeface.createFromAsset(getAssets(), "fonts/bebas_neue_regular.ttf");
-        lbl_username_player.setText(player.getUsername());
-        lbl_fullname_player.setText(setDataPlayerFull());
-        lbl_player_toolbar.setText(player.getName());
-        lbl_username_player.setTypeface(bebas_bold);
-        lbl_fullname_player.setTypeface(bebas_regular);
-        lbl_player_toolbar.setTypeface(bebas_bold);
-        setupAvatarProfile(player);
-        setupViewPager();
-        setupTabLayout();
-    }
-
-    public String setDataPlayerFull(){
-        String full_data;
-        if(principal) {
-            if(user.getCity_name().equalsIgnoreCase("no-data")){
-                full_data = user.getName();
-            } else {
-                full_data = user.getName() + " • " + user.getCity_name();
-            }
-        } else {
-            if(player.getCity_name().equalsIgnoreCase("no-data")){
-                full_data = player.getName();
-            } else {
-                full_data = player.getName() + " • " + player.getCity_name();
-            }
-        }
-        return full_data;
-    }
-
     public void setupViewPager(){
         List<String> tab_titles = new ArrayList<>();
-        tab_titles.add("consolas");
+        //tab_titles.add("consolas");
         if(principal){
             tab_titles.add("información");
         }
         tab_titles.add("estadísticas");
+        System.out.println(player.toString());
         view_pager.setAdapter(new TabPagerProfileAdapter(
                 getSupportFragmentManager(),
                 tab_titles, fab, principal,
                 player
         ));
         setupActivityEntry();
-    }
-
-    public void setupActivityEntry(){
-        if(tab_select == 0){
-            view_pager.setCurrentItem(0);
-        } else if(tab_select == 1){
-            view_pager.setCurrentItem(0);
-            app_bar.setExpanded(false, true);
-        } else if(tab_select == 2) {
-            view_pager.setCurrentItem(1);
-            if(principal) {
-                app_bar.setExpanded(false, true);
-            }
-        }
     }
 
     public void setupTabLayout(){
@@ -590,16 +557,21 @@ public class Profile extends AppCompatActivity implements
         }
     }
 
-    public void setupAvatarProfile(Player player){
-        String thumbnail = player.getThumbnail();
-        Picasso.with(context)
-                .load(thumbnail)
-                .error(R.drawable.avatar_default)
-                .placeholder(R.drawable.avatar_default)
-                .networkPolicy(NetworkPolicy.NO_CACHE)
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                .into(avatar_profile);
+    public void setupActivityEntry(){
+        if(tab_select == 0){
+            view_pager.setCurrentItem(0);
+        } else if(tab_select == 1){
+            view_pager.setCurrentItem(0);
+            app_bar.setExpanded(false, true);
+        } else if(tab_select == 2) {
+            view_pager.setCurrentItem(1);
+            if(principal) {
+                app_bar.setExpanded(false, true);
+            }
+        }
     }
+
+
 
     @OnClick(R.id.avatar_profile)
     public void clickAvatar(){
@@ -1347,8 +1319,74 @@ public class Profile extends AppCompatActivity implements
 
     public void openPreferences() {
         Intent intent = new Intent(context, SelectConsole.class);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("is_edit", true);
+        intent.putExtras(bundle);
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
+
+//region Jugadores
+
+    private void getPlayer(final int player_id) {
+        dialog.dialogProgress("Obteniendo datos del jugador");
+        String token = "Bearer " + user.getToken();
+        final String url = getString(R.string.url_api);
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setEndpoint(url)
+                .build();
+        Api api = restAdapter.create(Api.class);
+        api.showPlayer(token, player_id, new Callback<JsonObject>() {
+            @Override
+            public void success(JsonObject jsonObject, Response response) {
+                boolean success = jsonObject.get("success").getAsBoolean();
+                if (success) {
+                    player = new Gson().fromJson(jsonObject.get("data").getAsJsonObject(), Player.class);
+                    setupToolbar();
+                    setupDataPlayer();
+                }
+                dialog.cancelProgress();
+            }
+            @Override
+            public void failure(RetrofitError error) {
+                dialog.cancelProgress();
+                errorsRequest(error);
+                try {
+                    Log.d("Profile(getPlayer)", "Errors: " + error.getBody().toString());
+                    Log.d("Profile(getPlayer)", "Errors body: " + error.getBody().toString());
+                } catch (Exception ex) {
+                    Log.e("Profile(getPlayer)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
+                }
+            }
+        });
+    }
+
+    public void setupDataPlayer(){
+        Typeface bebas_bold = Typeface.createFromAsset(getAssets(), "fonts/bebas_neue_bold.ttf");
+        Typeface bebas_regular = Typeface.createFromAsset(getAssets(), "fonts/bebas_neue_regular.ttf");
+        lbl_username_player.setText(player.getUsername());
+        lbl_fullname_player.setText(setDataPlayerFull());
+        lbl_player_toolbar.setText(player.getName());
+        lbl_username_player.setTypeface(bebas_bold);
+        lbl_fullname_player.setTypeface(bebas_regular);
+        lbl_player_toolbar.setTypeface(bebas_bold);
+        setupAvatarProfile(player);
+        setupViewPager();
+        setupTabLayout();
+    }
+
+    public void setupAvatarProfile(Player player){
+        String thumbnail = player.getThumbnail();
+        Picasso.with(context)
+                .load(thumbnail)
+                .error(R.drawable.avatar_default)
+                .placeholder(R.drawable.avatar_default)
+                .networkPolicy(NetworkPolicy.NO_CACHE)
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                .into(avatar_profile);
+    }
+
+//endregion
 
 }

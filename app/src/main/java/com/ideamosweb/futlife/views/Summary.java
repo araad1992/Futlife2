@@ -68,6 +68,7 @@ public class Summary extends AppCompatActivity {
     private Typeface bebas_bold;
     private Typeface bebas_regular;
     boolean validate_prefereces;
+    private boolean is_edit;
 
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.lbl_toolbar)TextView lbl_toolbar;
@@ -97,11 +98,21 @@ public class Summary extends AppCompatActivity {
         bebas_bold = Typeface.createFromAsset(getAssets(), "fonts/bebas_neue_bold.ttf");
         bebas_regular = Typeface.createFromAsset(getAssets(), "fonts/bebas_neue_regular.ttf");
         validate_prefereces = true;
+        is_edit = false;
+        getParameters();
         setupToolbar();
         setupViewPager();
         setupTabLayout();
         setupUserData();
         setupLoadAvatar();
+    }
+
+    public void getParameters() {
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null) {
+            is_edit = bundle.getBoolean("is_edit");
+            System.out.println("is_edit: " + is_edit);
+        }
     }
 
     public void setupToolbar(){
@@ -338,7 +349,7 @@ public class Summary extends AppCompatActivity {
                     User user = userController.show();
                     user.setActive(true);
                     if(userController.update(user)) {
-                        if(preferenceController.clearConsolePreference() && preferenceController.clearGamePreference()) {
+                        if(preferenceController.clearConsolePreference(user_id) && preferenceController.clearGamePreference(user_id)) {
                             System.out.println("Se limpiaron las tablas");
                             JsonArray preferences = jsonObject.getAsJsonArray("preferences");
                             savePreferences(preferences);
@@ -471,8 +482,10 @@ public class Summary extends AppCompatActivity {
                     @Override
                     public void onClick(PromptDialog dialog) {
                         dialog.dismiss();
-                        startActivity(new Intent(Summary.this, Timeline.class));
-                        overridePendingTransition(R.anim.slide_open_translate, R.anim.slide_close_scale);
+                        if(!is_edit) {
+                            startActivity(new Intent(Summary.this, Timeline.class));
+                            overridePendingTransition(R.anim.slide_open_translate, R.anim.slide_close_scale);
+                        }
                         finish();
                     }
                 }).show();

@@ -143,12 +143,12 @@ public class FutlifeAirshipReceiber extends AirshipReceiver {
                 actionUpdateValueBalance(1);
                 break;
             case "score":
-                JsonObject json_challenge_score = json.getAsJsonObject("challenge").getAsJsonObject();
-                Challenge challenge_score = new Gson().fromJson(json_challenge_score, Challenge.class);
-                int challenge_code = challengeController.show(challenge_score.getChallenge_id()).getCode();
-                challenge_score.setCode(challenge_code);
-                challengeController.update(challenge_score);
-                actionReceivedChallenge();
+                //JsonObject json_challenge_score = json.getAsJsonObject("challenge").getAsJsonObject();
+                //Challenge challenge_score = new Gson().fromJson(json_challenge_score, Challenge.class);
+                //int challenge_code = challengeController.show(challenge_score.getChallenge_id()).getCode();
+                //challenge_score.setCode(challenge_code);
+                //challengeController.update(challenge_score);
+                //actionReceivedChallenge();
                 break;
             case "winner":
                 Balance balance_update = rechargeController.get();
@@ -158,30 +158,30 @@ public class FutlifeAirshipReceiber extends AirshipReceiver {
                 if(rechargeController.update(balance_update)) System.out.println("¡actualizo!");
                 break;
             case "leave":
-                Balance balance_leave = rechargeController.get();
-                float new_value_leave = json.get("new_value").getAsFloat();
-                balance_leave.setValue(new_value_leave);
-                if(rechargeController.update(balance_leave)) System.out.println("¡actualizo!");
-                JsonObject json_challenge_leave = json.getAsJsonObject("challenge").getAsJsonObject();
-                Challenge challenge_leave = new Gson().fromJson(json_challenge_leave, Challenge.class);
-                int code_leave = challengeController.show(challenge_leave.getChallenge_id()).getCode();
-                challenge_leave.setCode(code_leave);
-                challengeController.update(challenge_leave);
-                actionUpdateValueBalance(1);
-                actionReceivedChallenge();
-                break;
+                //Balance balance_leave = rechargeController.get();
+                //float new_value_leave = json.get("new_value").getAsFloat();
+                //balance_leave.setValue(new_value_leave);
+                //if(rechargeController.update(balance_leave)) System.out.println("¡actualizo!");
+                //JsonObject json_challenge_leave = json.getAsJsonObject("challenge").getAsJsonObject();
+                //Challenge challenge_leave = new Gson().fromJson(json_challenge_leave, Challenge.class);
+                //int code_leave = challengeController.show(challenge_leave.getChallenge_id()).getCode();
+                //challenge_leave.setCode(code_leave);
+                //challengeController.update(challenge_leave);
+                //actionUpdateValueBalance(1);
+                //actionReceivedChallenge();
+                //break;
             case "reported":
-                JsonObject json_challenge_reported = json.getAsJsonObject("challenge").getAsJsonObject();
-                Challenge challenge_reported = new Gson().fromJson(json_challenge_reported, Challenge.class);
-                int code = challengeController.show(challenge_reported.getChallenge_id()).getCode();
-                challenge_reported.setCode(code);
-                challengeController.update(challenge_reported);
-
-                JsonObject json_report = json.getAsJsonObject("report").getAsJsonObject();
-                Report report = new Gson().fromJson(json_report, Report.class);
-                report.setState("Pendiente");
-                reportController.create(report);
-                break;
+                //JsonObject json_challenge_reported = json.getAsJsonObject("challenge").getAsJsonObject();
+                //Challenge challenge_reported = new Gson().fromJson(json_challenge_reported, Challenge.class);
+                //int code = challengeController.show(challenge_reported.getChallenge_id()).getCode();
+                //challenge_reported.setCode(code);
+                //challengeController.update(challenge_reported);
+//
+                //JsonObject json_report = json.getAsJsonObject("report").getAsJsonObject();
+                //Report report = new Gson().fromJson(json_report, Report.class);
+                //report.setState("Pendiente");
+                //reportController.create(report);
+                //break;
             case "accept_challenge":
                 JsonObject json_player_accept = json.getAsJsonObject("user");
                 System.out.println("json accept: " + json_player_accept.toString());

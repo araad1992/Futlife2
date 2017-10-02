@@ -340,7 +340,7 @@ public class RowRecyclerChallengeStateAdapter extends RecyclerView.Adapter<RowRe
             public void onClick(View v) {
                 Intent intent = new Intent(context, Profile.class)
                         .putExtra("tab_select", 0)
-                        .putExtra("code", player.getCode())
+                        .putExtra("user_id", player.getUser_id())
                         .putExtra("principal", false)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);

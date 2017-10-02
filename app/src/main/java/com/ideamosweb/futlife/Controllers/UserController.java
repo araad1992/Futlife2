@@ -81,12 +81,12 @@ public class UserController {
     }
 
     //Función que permite obtener a todos los usuarios de la app excepto el logueado
-    public List<User> all(){
+    public List<User> all(int user_id){
         List<User> players;
         try {
             helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
             RuntimeExceptionDao<User, Integer> userDao = helper.getUserRuntimeDao();
-            players = userDao.queryBuilder().where().ne("code", 1).query();
+            players = userDao.queryBuilder().where().ne("code", user_id).query();
         }catch (Exception ex) {
             players = null;
             Log.e("UserController(delete)", "Error: " + ex.getMessage());

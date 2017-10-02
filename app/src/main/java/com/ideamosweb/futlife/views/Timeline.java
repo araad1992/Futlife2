@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -43,25 +42,18 @@ import android.widget.TextView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.facebook.login.LoginManager;
-import com.google.android.flexbox.FlexboxLayout;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.ideamosweb.futlife.Adapters.SheetDialogFilter;
 import com.ideamosweb.futlife.Adapters.TabPagerTimelineAdapter;
 import com.ideamosweb.futlife.Controllers.ChallengeController;
-import com.ideamosweb.futlife.Controllers.ConsoleController;
-import com.ideamosweb.futlife.Controllers.GameController;
 import com.ideamosweb.futlife.Controllers.PreferenceController;
 import com.ideamosweb.futlife.Controllers.RechargeController;
 import com.ideamosweb.futlife.Models.Balance;
 import com.ideamosweb.futlife.Models.Challenge;
-import com.ideamosweb.futlife.Models.Console;
 import com.ideamosweb.futlife.Models.ConsolePreference;
-import com.ideamosweb.futlife.Models.Game;
 import com.ideamosweb.futlife.Models.GamePreference;
-import com.ideamosweb.futlife.Models.Player;
 import com.ideamosweb.futlife.Objects.SettingWeb;
 import com.ideamosweb.futlife.Service.Api;
 import com.ideamosweb.futlife.Controllers.PlayerController;
@@ -90,9 +82,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.refactor.lib.colordialog.ColorDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
-import fisk.chipcloud.ChipCloud;
-import fisk.chipcloud.ChipCloudConfig;
-import fisk.chipcloud.ChipListener;
 import pl.polak.clicknumberpicker.ClickNumberPickerListener;
 import pl.polak.clicknumberpicker.ClickNumberPickerView;
 import pl.polak.clicknumberpicker.PickerClickType;
@@ -209,9 +198,9 @@ public class Timeline extends AppCompatActivity
         setupToolbar();
         setupDrawerLayout();
         loadDataUser();
+        setupViewPager();
         createPreferences();
         setupSearch();
-        getPlayers();
     }
 
     public void createPreferences() {
@@ -558,7 +547,7 @@ public class Timeline extends AppCompatActivity
                 showInputSearch();
                 break;
             case R.id.action_filter:
-                sheetDialogFilter sheet_dialog = sheetDialogFilter.newInstance(context);
+                SheetDialogFilter sheet_dialog = SheetDialogFilter.newInstance(context);
                 sheet_dialog.setCancelable(true);
                 sheet_dialog.show(((FragmentActivity)context).getSupportFragmentManager(), "Sheet Dialog Filter");
                 break;
@@ -1086,42 +1075,6 @@ public class Timeline extends AppCompatActivity
         });
     }
 
-//endregion
-
-//region Descarga de jugadores activos en la app
-
-    public void getPlayers() {
-        User user = userController.show();
-        String token = "Bearer " + user.getToken();
-        int user_id = user.getUser_id();
-        final String url = getString(R.string.url_api);
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setEndpoint(url)
-                .build();
-        Api api = restAdapter.create(Api.class);
-        api.getUsers(token, user_id, new Callback<JsonObject>() {
-            @Override
-            public void success(JsonObject jsonObject, Response response) {
-                boolean success = jsonObject.get("success").getAsBoolean();
-                if (success) {
-                    JsonArray data = jsonObject.getAsJsonArray("data");
-                    savePlayers(data);
-                }
-            }
-            @Override
-            public void failure(RetrofitError error) {
-                errorsRequest(error);
-                try {
-                    Log.d("Timeline(getPlayers)", "Errors: " + error.getBody().toString());
-                    Log.d("Timeline(getPlayers)", "Errors body: " + error.getBody().toString());
-                } catch (Exception ex) {
-                    Log.e("Timeline(getPlayers)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
-                }
-            }
-        });
-    }
-
     public void errorsRequest(RetrofitError retrofitError){
         if(retrofitError.getKind().equals(RetrofitError.Kind.NETWORK)){
             dialog.dialogErrors("Error de conexión", retrofitError.getMessage());
@@ -1137,172 +1090,6 @@ public class Timeline extends AppCompatActivity
                 String message = retrofitError.getMessage();
                 dialog.dialogErrors("Error " + status, message);
             }
-        }
-    }
-
-    public void savePlayers(JsonArray array){
-        try {
-            if(array.size() > 0) {
-                for (int i = 0; i < array.size(); i++) {
-                    JsonObject json = array.get(i).getAsJsonObject();
-                    Player player = new Gson().fromJson(json, Player.class);
-                    if(playerController.create(player) == 1){
-                        if(json.has("preferences")){
-                            int user_id = player.getUser_id();
-                            JsonArray preferences = json.getAsJsonArray("preferences");
-                            savePreferencesPlayers(preferences, user_id);
-                        }
-                        System.out.println(player.toString());
-                    }
-                }
-                setupViewPager();
-                toast.toastSuccess("Jugadores cargados...");
-            } else {
-                toast.toastWarning("Sin jugadores disponibles...");
-            }
-        } catch (JsonIOException e){
-            Log.e("Timeline(savePlayers)", "Error ex: " + e.getMessage());
-        }
-    }
-
-    public void savePreferencesPlayers(JsonArray array, int user_id){
-        try {
-            if(array.size() > 0) {
-                for (int i = 0; i < array.size(); i++) {
-                    JsonObject preference = array.get(i).getAsJsonObject();
-                    JsonObject json_console = preference.getAsJsonObject("console");
-                    int preference_id = preference.get("id").getAsInt();
-                    String player_id = "";
-                    if(!preference.get("player_id").isJsonNull()){
-                        player_id = preference.get("player_id").getAsString();
-                    }
-                    ConsolePreference console = new Gson().fromJson(json_console, ConsolePreference.class);
-                    console.setPreference_id(preference_id);
-                    console.setUser_id(user_id);
-                    console.setPlayer_id(player_id);
-                    if(preferenceController.create(console)){
-                        System.out.println("consola: " + console.toString());
-                        JsonArray array_games = preference.getAsJsonArray("games");
-                        for (int j = 0; j < array_games.size(); j++) {
-                            JsonObject json_game = array_games.get(j).getAsJsonObject();
-                            GamePreference game = new Gson().fromJson(json_game, GamePreference.class);
-                            game.setUser_id(user_id);
-                            game.setConsole_id(console.getConsole_id());
-                            if(preferenceController.create(game)) {
-                                System.out.println("juegos:" + game.toString());
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (JsonIOException e){
-            Log.e("Timeline(savePreferencesPlayers)", "Error ex: " + e.getMessage());
-        }
-    }
-
-//endregion
-
-//region Check if service is running
-
-    public static class sheetDialogFilter extends BottomSheetDialogFragment {
-
-        private static Context context;
-        private ConsoleController consoleController;
-        private GameController gameController;
-        private List<String> list_tags;
-
-        @Bind(R.id.layout_items)FlexboxLayout layout_items;
-        @Bind(R.id.lbl_title_filter)TextView lbl_title_filter;
-        @Bind(R.id.lbl_subtitle_filter)TextView lbl_subtitle_filter;
-
-        public static sheetDialogFilter newInstance(Context context_instance) {
-            context = context_instance;
-            return new sheetDialogFilter();
-        }
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.sheet_dialog_filter, container, false);
-            ButterKnife.bind(this, view);
-            setViewsFilter();
-            return view;
-        }
-
-        public void setViewsFilter(){
-            consoleController = new ConsoleController(context);
-            gameController = new GameController(context);
-            list_tags = new ArrayList<>();
-            setFontLabels();
-            setupItems();
-        }
-
-        public void setFontLabels(){
-            Typeface bebas_regular = Typeface.createFromAsset(getContext().getAssets(), "fonts/bebas_neue_regular.ttf");
-            lbl_title_filter.setTypeface(bebas_regular);
-            lbl_subtitle_filter.setTypeface(bebas_regular);
-        }
-
-        public void setupItems() {
-            List<String> name_items = new ArrayList<>();
-            List<Console> consoles = consoleController.show();
-            List<Game> games = gameController.show();
-            for (int i = 0; i < consoles.size(); i++) {
-                name_items.add(consoles.get(i).getName());
-            }
-            for (int i = 0; i < games.size(); i++) {
-                name_items.add(games.get(i).getName());
-            }
-
-            ChipCloudConfig config = configChip();
-            ChipCloud chipCloud = new ChipCloud(context, layout_items, config);
-            chipCloud.addChips(name_items);
-            checkTag(chipCloud);
-        }
-
-        public void checkTag(final ChipCloud chipCloud){
-            chipCloud.setListener(new ChipListener() {
-                @Override
-                public void chipCheckedChange(int index, boolean checked, boolean userClick) {
-                    if(checked) {
-                        list_tags.add(chipCloud.getLabel(index));
-                        System.out.println("tag: " + chipCloud.getLabel(index));
-                        System.out.println("index: " + index);
-                    } else {
-                        int position = 0;
-                        for (int i = 0; i < list_tags.size(); i++) {
-                            if(list_tags.contains(chipCloud.getLabel(index))) {
-                                position = i;
-                                break;
-                            }
-                        }
-                        list_tags.remove(position);
-                    }
-                }
-            });
-        }
-
-        public ChipCloudConfig configChip() {
-            Typeface bebas_regular = Typeface.createFromAsset(context.getAssets(), "fonts/bebas_neue_regular.ttf");
-            return new ChipCloudConfig()
-                    .typeface(bebas_regular)
-                    .selectMode(ChipCloud.SelectMode.multi)
-                    .checkedChipColor(ContextCompat.getColor(context, R.color.color_success))
-                    .checkedTextColor(ContextCompat.getColor(context, R.color.icons))
-                    .uncheckedChipColor(ContextCompat.getColor(context, R.color.divider))
-                    .uncheckedTextColor(ContextCompat.getColor(context, R.color.primaryText))
-                    .useInsetPadding(true);
-        }
-
-        @OnClick(R.id.but_cancel)
-        public void cancel(){
-            dismiss();
-        }
-
-        @OnClick(R.id.but_done)
-        public void filter(){
-            if(!list_tags.isEmpty()) {
-                StationBus.getBus().post(new MessageBusTimeline(true, 2, list_tags));
-            }
-            dismiss();
         }
     }
 

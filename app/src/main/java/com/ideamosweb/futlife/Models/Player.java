@@ -12,48 +12,45 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "players")
 public class Player {
 
-    @Expose(serialize = false, deserialize = false)
-    @DatabaseField(generatedId = true)
-    private int code;
-
     @SerializedName("id")
-    @DatabaseField(canBeNull = false)
     private Integer user_id;
-    @DatabaseField(canBeNull = false)
     private String name;
-    @DatabaseField(canBeNull = false)
     private String username;
-    @DatabaseField(canBeNull = false)
     private String email;
-    @DatabaseField(canBeNull = true)
     private String avatar;
-    @DatabaseField(canBeNull = true)
     private String thumbnail;
-    @DatabaseField(canBeNull = true)
     private String player_id;
-    @DatabaseField(canBeNull = true)
     private int ubication;
-    @DatabaseField(canBeNull = true)
     private String city_name;
-    @DatabaseField(canBeNull = true)
     private String telephone;
-    @DatabaseField(canBeNull = true)
     private String birthdate;
-    @DatabaseField(canBeNull = true)
     private String platform;
-    @DatabaseField(canBeNull = false)
     private Boolean social;
-    @DatabaseField(canBeNull = false)
     private Boolean active;
 
+    //region Constructores
     public Player() {}
-
-
-
-//region Getters
-    public int getCode() {
-        return code;
+    public Player(Integer user_id, String name, String username, String email, String avatar,
+                  String thumbnail, String player_id, int ubication, String city_name,
+                  String telephone, String birthdate, String platform, Boolean social, Boolean active) {
+        this.user_id = user_id;
+        this.name = name;
+        this.username = username;
+        this.email = email;
+        this.avatar = avatar;
+        this.thumbnail = thumbnail;
+        this.player_id = player_id;
+        this.ubication = ubication;
+        this.city_name = city_name;
+        this.telephone = telephone;
+        this.birthdate = birthdate;
+        this.platform = platform;
+        this.social = social;
+        this.active = active;
     }
+    //endregion
+
+    //region Getters
     public Integer getUser_id() {
         return user_id;
     }
@@ -96,9 +93,9 @@ public class Player {
     public Boolean getActive() {
         return active;
     }
-//endregion
+    //endregion
 
-//region Setters
+    //region Setters
     public void setUser_id(Integer user_id) {
         this.user_id = user_id;
     }
@@ -141,13 +138,12 @@ public class Player {
     public void setActive(Boolean active) {
         this.active = active;
     }
-//endregion
+    //endregion
 
-    //Funcion para imprimir el objeto
+    //region Funcion para imprimir el objeto
     @Override
     public String toString() {
         return "Player{" +
-            "code=" + code +
             ", user_id=" + user_id +
             ", name='" + name + '\'' +
             ", username='" + username + '\'' +
@@ -164,4 +160,5 @@ public class Player {
             ", active=" + active +
         '}';
     }
+    //endregion
 }
