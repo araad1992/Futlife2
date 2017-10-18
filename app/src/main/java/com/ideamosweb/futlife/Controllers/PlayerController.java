@@ -30,16 +30,16 @@ public class PlayerController {
     public int create(Player player_tmp){
         int res = 0;
         try {
-            helper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
-            RuntimeExceptionDao<Player, Integer> playerDao = helper.getPlayerRuntimeDao();
-            Player player = exists(player_tmp.getUser_id());
-            if(player == null) {
-                playerDao.create(player_tmp);
-                res = 1;
-            } else {
-                playerDao.update(player);
-                res = 2;
-            }
+            //helper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
+            //RuntimeExceptionDao<Player, Integer> playerDao = helper.getPlayerRuntimeDao();
+            //Player player = exists(player_tmp.getUser_id());
+            //if(player == null) {
+            //    playerDao.create(player_tmp);
+            //    res = 1;
+            //} else {
+            //    playerDao.update(player);
+            //    res = 2;
+            //}
         } catch (Exception ex) {
             Log.e("PlayerController(create)", "Error: " + ex.getMessage());
         }
@@ -49,12 +49,12 @@ public class PlayerController {
     public Player exists(int user_id){
         Player player = null;
         try {
-            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
-            RuntimeExceptionDao<Player, Integer> playerDao = helper.getPlayerRuntimeDao();
-            List<Player> players = playerDao.queryBuilder().where().eq("user_id", user_id).query();
-            if(!players.isEmpty()) {
-                player = players.get(0);
-            }
+            //helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
+            //RuntimeExceptionDao<Player, Integer> playerDao = helper.getPlayerRuntimeDao();
+            //List<Player> players = playerDao.queryBuilder().where().eq("user_id", user_id).query();
+            //if(!players.isEmpty()) {
+            //    player = players.get(0);
+            //}
         } catch (Exception ex) {
             Log.e("PlayerController(exists)", "Error: " + ex.getMessage());
         }
@@ -65,9 +65,9 @@ public class PlayerController {
     public boolean update(Player Player){
         boolean res = true;
         try {
-            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
-            RuntimeExceptionDao<Player, Integer> jugadorDao = helper.getPlayerRuntimeDao();
-            jugadorDao.update(Player);
+            //helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
+            //RuntimeExceptionDao<Player, Integer> jugadorDao = helper.getPlayerRuntimeDao();
+            //jugadorDao.update(Player);
         } catch (Exception ex) {
             res = false;
             Log.e("PlayerController(update)", "Error: " + ex.getMessage());
@@ -77,11 +77,11 @@ public class PlayerController {
 
     //Funcion que permite mostrar toda la informacion del jugador
     public Player show(int code){
-        Player Player;
+        Player Player = null;
         try {
-            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
-            RuntimeExceptionDao<Player, Integer> PlayerDao = helper.getPlayerRuntimeDao();
-            Player = PlayerDao.queryForId(code);
+            //helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
+            //RuntimeExceptionDao<Player, Integer> PlayerDao = helper.getPlayerRuntimeDao();
+            //Player = PlayerDao.queryForId(code);
         } catch (Exception ex) {
             Player = null;
             Log.e("PlayerController(show)", "Error: " + ex.getMessage());
@@ -90,19 +90,19 @@ public class PlayerController {
     }
 
     public Player find(int player_id){
-        Player player;
+        Player player = null;
         try {
-            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
-            RuntimeExceptionDao<Player, Integer> playerDao = helper.getPlayerRuntimeDao();
-            List<Player> players = playerDao.queryBuilder()
-                    .where()
-                    .eq("user_id", player_id)
-                    .query();
-            if(players.isEmpty()) {
-                player = null;
-            } else {
-                player = players.get(0);
-            }
+            //helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
+            //RuntimeExceptionDao<Player, Integer> playerDao = helper.getPlayerRuntimeDao();
+            //List<Player> players = playerDao.queryBuilder()
+            //        .where()
+            //        .eq("user_id", player_id)
+            //        .query();
+            //if(players.isEmpty()) {
+            //    player = null;
+            //} else {
+            //    player = players.get(0);
+            //}
         } catch (Exception ex) {
             player = null;
             Log.e("PlayerController(find)", "Error: " + ex.getMessage());
@@ -113,16 +113,16 @@ public class PlayerController {
     public List<Player> search(String keyword) {
         List<Player> players = new ArrayList<>();
         try {
-            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
-            RuntimeExceptionDao<Player, Integer> playerDao = helper.getPlayerRuntimeDao();
-            players = playerDao.queryBuilder()
-                    .where()
-                    .like("name", "%" + keyword + "%")
-                    .or()
-                    .like("username", "%" + keyword + "%")
-                    .or()
-                    .like("email", "%" + keyword + "%")
-                    .query();
+            //helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
+            //RuntimeExceptionDao<Player, Integer> playerDao = helper.getPlayerRuntimeDao();
+            //players = playerDao.queryBuilder()
+            //        .where()
+            //        .like("name", "%" + keyword + "%")
+            //        .or()
+            //        .like("username", "%" + keyword + "%")
+            //        .or()
+            //        .like("email", "%" + keyword + "%")
+            //        .query();
         }catch (Exception ex) {
             Log.e("PlayerController(search)", "Error: " + ex.getMessage());
         }
@@ -133,9 +133,9 @@ public class PlayerController {
     public List<Player> get(){
         List<Player> players = new ArrayList<>();
         try {
-            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
-            RuntimeExceptionDao<Player, Integer> playerDao = helper.getPlayerRuntimeDao();
-            players = playerDao.queryForAll();
+            //helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
+            //RuntimeExceptionDao<Player, Integer> playerDao = helper.getPlayerRuntimeDao();
+            //players = playerDao.queryForAll();
         }catch (Exception ex) {
             Log.e("PlayerController(get)", "Error: " + ex.getMessage());
         }
@@ -146,9 +146,9 @@ public class PlayerController {
     public boolean delete(Player Player){
         boolean res = true;
         try {
-            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
-            RuntimeExceptionDao<Player, Integer> playerDao = helper.getPlayerRuntimeDao();
-            playerDao.delete(Player);
+            //helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
+            //RuntimeExceptionDao<Player, Integer> playerDao = helper.getPlayerRuntimeDao();
+            //playerDao.delete(Player);
         } catch (Exception ex) {
             res = false;
             Log.e("PlayerController(delete)", "Error: " + ex.getMessage());

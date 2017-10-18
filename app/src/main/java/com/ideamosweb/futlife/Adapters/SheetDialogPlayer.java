@@ -24,6 +24,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ideamosweb.futlife.Controllers.ChallengeController;
+import com.ideamosweb.futlife.Controllers.ConsoleController;
+import com.ideamosweb.futlife.Controllers.GameController;
 import com.ideamosweb.futlife.Controllers.PreferenceController;
 import com.ideamosweb.futlife.Controllers.RechargeController;
 import com.ideamosweb.futlife.Controllers.UserController;
@@ -72,6 +74,10 @@ public class SheetDialogPlayer extends BottomSheetDialogFragment {
     private PreferenceController preferenceController;
     private ChallengeController challengeController;
     private RechargeController rechargeController;
+
+    private ConsoleController consoleController;
+    private GameController gameController;
+
     private MaterialDialog dialog;
     private ToastMessages toast;
     private Utils utils;
@@ -105,6 +111,10 @@ public class SheetDialogPlayer extends BottomSheetDialogFragment {
         preferenceController = new PreferenceController(getContext());
         challengeController = new ChallengeController(getContext());
         rechargeController = new RechargeController(getContext());
+
+        consoleController = new ConsoleController(context);
+        gameController = new GameController(context);
+
         dialog = new MaterialDialog(getContext());
         toast = new ToastMessages(getContext());
         utils = new Utils(context);
@@ -265,7 +275,7 @@ public class SheetDialogPlayer extends BottomSheetDialogFragment {
         final List<ConsolePreference> equals_consoles = getPreferencesConsoles();
         final List<GamePreference> equals_games = getPreferencesGames(equals_consoles);
         if(utils.connect()) {
-            getSettings(view, alertDialog, equals_consoles, equals_games);
+            getSettings(view, alertDialog);
         } else {
             Typeface bebas_regular = Typeface.createFromAsset(context.getAssets(), "fonts/bebas_neue_regular.ttf");
             TextView lbl_data_not_found = (TextView)view.findViewById(R.id.lbl_data_not_found);
@@ -277,54 +287,32 @@ public class SheetDialogPlayer extends BottomSheetDialogFragment {
         }
     }
 
-    public void setupViewsDialogChallenge(View view, final AlertDialog alertDialog, List<ConsolePreference> equals_consoles, List<GamePreference> equals_games){
-        Typeface bebas_regular = Typeface.createFromAsset(context.getAssets(), "fonts/bebas_neue_regular.ttf");
+    public void setupViewsDialogChallenge(View view, final AlertDialog alertDialog){
         TextView lbl_data_not_found = (TextView)view.findViewById(R.id.lbl_data_not_found);
         ProgressBar progress_bar_dialog = (ProgressBar)view.findViewById(R.id.progress_bar_dialog);
         LinearLayout layout_options_challenge = (LinearLayout)view.findViewById(R.id.layout_options_challenge);
-
-        if(equals_consoles.isEmpty()) {
-            lbl_data_not_found.setTypeface(bebas_regular);
-            lbl_data_not_found.setVisibility(View.VISIBLE);
-            progress_bar_dialog.setVisibility(View.GONE);
-        } else {
-            if(equals_games.isEmpty()) {
-                lbl_data_not_found.setText("No tienes juegos en comun con este usuario");
-                lbl_data_not_found.setTypeface(bebas_regular);
-                lbl_data_not_found.setVisibility(View.VISIBLE);
-                progress_bar_dialog.setVisibility(View.GONE);
-            } else {
-                lbl_data_not_found.setVisibility(View.GONE);
-                progress_bar_dialog.setVisibility(View.GONE);
-                layout_options_challenge.setVisibility(View.VISIBLE);
-                setupSpinnersAndButtons(view, equals_consoles, equals_games, alertDialog);
-            }
-        }
+        lbl_data_not_found.setVisibility(View.GONE);
+        progress_bar_dialog.setVisibility(View.GONE);
+        layout_options_challenge.setVisibility(View.VISIBLE);
+        setupSpinnersAndButtons(view, alertDialog);
     }
 
-    public void setupSpinnersAndButtons(View view, final List<ConsolePreference> equals_consoles, final List<GamePreference> equals_games, final AlertDialog alertDialog){
+    public void setupSpinnersAndButtons(View view, final AlertDialog alertDialog){
         //Spinners de las consolas y juegos
         final MaterialSpinner spinner_consoles = (MaterialSpinner)view.findViewById(R.id.spinner_consoles);
         final MaterialSpinner spinner_games = (MaterialSpinner)view.findViewById(R.id.spinner_games);
         final List<String> titles_consoles = new ArrayList<>();
         titles_consoles.add(0, "Consolas");
-        for (int i = 0; i < equals_consoles.size(); i++) {
-            titles_consoles.add(equals_consoles.get(i).getName());
-        }
+        titles_consoles.addAll(consoleController.showNames());
         spinner_consoles.setItems(titles_consoles);
         spinner_games.setItems("Juegos");
         spinner_consoles.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
                 if(position != 0){
-                    int console_id = equals_consoles.get(position - 1).getConsole_id();
                     List<String> titles_games = new ArrayList<>();
                     titles_games.add(0, "Juegos");
-                    for (int i = 0; i < equals_games.size(); i++) {
-                        if(equals_games.get(i).getConsole_id() == console_id) {
-                            titles_games.add(equals_games.get(i).getName());
-                        }
-                    }
+                    titles_games.addAll(gameController.showNames());
                     spinner_games.setItems(titles_games);
                 } else {
                     spinner_games.setItems("Juegos");
@@ -514,6 +502,9 @@ public class SheetDialogPlayer extends BottomSheetDialogFragment {
                         StationBus.getBus().post(new MessageBusChallenge(true));
 
                     }
+                } else {
+                    String message = jsonObject.get("message").getAsString();
+                    dialog.dialogWarnings("Alerta", message);
                 }
                 dialog.cancelProgress();
             }
@@ -681,7 +672,7 @@ public class SheetDialogPlayer extends BottomSheetDialogFragment {
     }
 
     //Settings web
-    public void getSettings(final View view, final AlertDialog alertDialog, final List<ConsolePreference> equals_consoles, final List<GamePreference> equals_games) {
+    public void getSettings(final View view, final AlertDialog alertDialog) {
         String platform = "m";
         final String url = context.getString(R.string.url_admin);
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -696,7 +687,7 @@ public class SheetDialogPlayer extends BottomSheetDialogFragment {
                 if (success) {
                     JsonObject json_setting = jsonObject.get("settings").getAsJsonObject();
                     setting = new Gson().fromJson(json_setting, SettingWeb.class);
-                    setupViewsDialogChallenge(view, alertDialog, equals_consoles, equals_games);
+                    setupViewsDialogChallenge(view, alertDialog);
                 }
             }
             @Override

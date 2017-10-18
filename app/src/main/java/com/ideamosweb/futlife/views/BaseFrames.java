@@ -1,11 +1,13 @@
 package com.ideamosweb.futlife.views;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
 import com.ideamosweb.futlife.Fragments.DialogAvatar;
 import com.ideamosweb.futlife.Fragments.FrameNotifications;
+import com.ideamosweb.futlife.Models.Challenge;
 import com.ideamosweb.futlife.R;
 
 public class BaseFrames extends FragmentActivity {
@@ -42,11 +44,9 @@ public class BaseFrames extends FragmentActivity {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             switch (from) {
                 case "notifications":
-                    String challenge_id = getIntent().getStringExtra("challenge_id");
-                    String player_id = getIntent().getStringExtra("player_id");
+                    Challenge challenge = (Challenge) getIntent().getSerializableExtra("challenge");
                     FrameNotifications notifications = new FrameNotifications();
-                    bundle.putString("challenge_id", challenge_id);
-                    bundle.putString("player_id", player_id);
+                    bundle.putSerializable("challenge", challenge);
                     notifications.setArguments(bundle);
                     transaction.replace(R.id.coordinator_base, notifications).commit();
                     break;

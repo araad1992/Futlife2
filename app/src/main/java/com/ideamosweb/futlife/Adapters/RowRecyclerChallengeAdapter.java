@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.gson.Gson;
@@ -122,39 +121,24 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
         preferenceController = new PreferenceController(context);
         dialog = new MaterialDialog(context);
         toast = new ToastMessages(context);
-        ConsoleController consoleController = new ConsoleController(context);
-        GameController gameController = new GameController(context);
+
         Challenge challenge = challenges.get(position);
-        Console console = consoleController.find(challenge.getConsole_id());
-        Game game = gameController.find(challenge.getGame_id());
-        setPlayerOrUser(holder, challenge);
-        setTypeFaceLevel(holder, console, game);
+        loadAvatarPlayer(holder.avatar_player_1, challenge);
+        setTypeFaceUsername(holder.lbl_player_1, challenge);
+        clickCardDetails(holder.avatar_player_1, challenge);
+        setTypeFaceLevel(holder, challenge);
         setLabels(holder, challenge);
         holder.lbl_read_challenge.setVisibility(View.GONE);
         holder.lbl_state_challenge.setVisibility(View.GONE);
         setElementsRival(holder);
         animateCardPlayer(holder.card_challenge_live);
         longClickCard(holder, challenge);
-        clickEnjoyOpenChallenge(holder, challenge, console, game);
+        clickEnjoyOpenChallenge(holder, challenge);
     }
 
-    public void setPlayerOrUser(AdapterView holder, Challenge challenge){
-        Player player = playerController.find(challenge.getPlayer_one());
-        if(player != null) {
-            loadAvatarPlayer(holder.avatar_player_1, player.getThumbnail());
-            setTypeFaceUsername(holder.lbl_player_1, player.getUsername());
-            clickCardDetails(holder.avatar_player_1, player.getUser_id(), false);
-        } else {
-            User user = userController.show();
-            loadAvatarPlayer(holder.avatar_player_1, user.getThumbnail());
-            setTypeFaceUsername(holder.lbl_player_1, user.getUsername());
-            clickCardDetails(holder.avatar_player_1, user.getCode(), true);
-        }
-    }
-
-    public void loadAvatarPlayer(CircleImageView avatar_1, String url_thumbnail){
+    private void loadAvatarPlayer(CircleImageView avatar_1, Challenge challenge){
         Picasso.with(context)
-                .load(url_thumbnail)
+                .load(challenge.getAvatar_one())
                 .fit()
                 .placeholder(R.drawable.avatar_default)
                 .error(R.drawable.avatar_default)
@@ -162,21 +146,24 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
                 .into(avatar_1);
     }
 
-    public void setTypeFaceUsername(TextView lbl_username_1, String text){
+    private void setTypeFaceUsername(TextView lbl_username_1, Challenge challenge){
         Typeface bebas_bold = Typeface.createFromAsset(
                 context.getAssets(), "fonts/bebas_neue_bold.ttf"
         );
-        lbl_username_1.setText(text);
+        lbl_username_1.setText(challenge.getUsername_one());
         lbl_username_1.setTypeface(bebas_bold);
     }
 
-    public void setTypeFaceLevel(AdapterView holder, Console console, Game game){
+    private void setTypeFaceLevel(AdapterView holder, Challenge challenge){
+        ConsoleController consoleController = new ConsoleController(context);
+        GameController gameController = new GameController(context);
+        Game game = gameController.find(challenge.getGame_id());
+        Console console = consoleController.find(challenge.getConsole_id());
         Typeface bebas_regular = Typeface.createFromAsset(context.getAssets(), "fonts/bebas_neue_regular.ttf");
         holder.lbl_level_1.setText(console.getName());
         holder.lbl_level_2.setText(console.getName());
         holder.lbl_level_1.setTypeface(bebas_regular);
         holder.lbl_level_2.setTypeface(bebas_regular);
-
         Picasso.with(context)
                 .load(game.getThumbnail())
                 .placeholder(R.drawable.fifa16_mini)
@@ -185,7 +172,7 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
                 .into(holder.img_thumbnail_game);
     }
 
-    public void setLabels(AdapterView holder, Challenge challenge){
+    private void setLabels(AdapterView holder, Challenge challenge){
         Typeface bebas_bold = Typeface.createFromAsset(context.getAssets(), "fonts/bebas_neue_bold.ttf");
         holder.lbl_score_1.setVisibility(View.GONE);
         holder.lbl_score_2.setVisibility(View.GONE);
@@ -193,7 +180,17 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
         holder.lbl_amount.setTypeface(bebas_bold);
     }
 
-    public void clickCardDetails(CircleImageView avatar, final int code, final boolean principal){
+    private void clickCardDetails(CircleImageView avatar, Challenge challenge){
+        final int user_id;
+        final boolean principal;
+        User user = userController.show();
+        if(user.getUser_id() == challenge.getPlayer_one()) {
+            user_id = user.getUser_id();
+            principal = true;
+        } else {
+            user_id = challenge.getPlayer_one();
+            principal = false;
+        }
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -201,14 +198,14 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
                 activity.startActivity(
                         new Intent(context, Profile.class)
                                 .putExtra("tab_select", 0)
-                                .putExtra("code", code)
+                                .putExtra("code", user_id)
                                 .putExtra("principal", principal));
                 activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
     }
 
-    public void setElementsRival(AdapterView holder){
+    private void setElementsRival(AdapterView holder){
         Typeface bebas_bold = Typeface.createFromAsset(context.getAssets(), "fonts/bebas_neue_bold.ttf");
         holder.lbl_player_2.setText("¡únete!");
         holder.lbl_player_2.setTypeface(bebas_bold);
@@ -220,11 +217,11 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
                 .into(holder.avatar_player_2);
     }
 
-    public void animateCardPlayer(CardView card_challenge_open){
+    private void animateCardPlayer(CardView card_challenge_open){
         YoYo.with(Techniques.FadeInUp).duration(400).playOn(card_challenge_open);
     }
 
-    public void longClickCard(AdapterView holder, final Challenge challenge){
+    private void longClickCard(AdapterView holder, final Challenge challenge){
         holder.card_challenge_live.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -241,7 +238,11 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
         });
     }
 
-    public void clickEnjoyOpenChallenge(AdapterView holder, final Challenge challenge, final Console console, final Game game){
+    private void clickEnjoyOpenChallenge(AdapterView holder, final Challenge challenge){
+        ConsoleController consoleController = new ConsoleController(context);
+        GameController gameController = new GameController(context);
+        final Game game = gameController.find(challenge.getGame_id());
+        final Console console = consoleController.find(challenge.getConsole_id());
         holder.card_challenge_live.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -263,7 +264,7 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
 
 //region
 
-    public void dialogDelete(int challenge_id){
+    private void dialogDelete(int challenge_id){
         AlertDialog.Builder builder = new AlertDialog.Builder(dialogContext);
         LayoutInflater inflater = (LayoutInflater)dialogContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.dialog_delete, null);
@@ -273,14 +274,12 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
         alertDialog.show();
     }
 
-    public void setElementsDelete(View view, final AlertDialog alertDialog, final int challenge_id){
+    private void setElementsDelete(View view, final AlertDialog alertDialog, final int challenge_id){
         Typeface bebas_regular = Typeface.createFromAsset(context.getAssets(), "fonts/bebas_neue_regular.ttf");
-
         Button but_cancel = (Button)view.findViewById(R.id.but_cancel_delete);
         but_cancel.setTypeface(bebas_regular);
         Button but_done = (Button)view.findViewById(R.id.but_done_delete);
         but_done.setTypeface(bebas_regular);
-
         but_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -296,7 +295,7 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
         });
     }
 
-    public void deleteChallenge(final int challenge_id){
+    private void deleteChallenge(final int challenge_id){
         String token = "Bearer " + userController.show().getToken();
         dialog.dialogProgress("Eliminando reto...");
         String url = context.getString(R.string.url_api);
@@ -333,7 +332,7 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
         });
     }
 
-    public void updateValueRecharge(float initial_value){
+    private void updateValueRecharge(float initial_value){
         Balance balance = rechargeController.get();
         float actual_value = balance.getValue();
         float total_value = actual_value + initial_value;
@@ -350,7 +349,7 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
                 String error = retrofitError.getBody().toString();
                 JsonParser parser = new JsonParser();
                 JsonObject jsonErrors = (JsonObject)parser.parse(error);
-                if(jsonErrors.has("error")){
+                if(jsonErrors.has("message")){
                     String title = "¡Error!";
                     String message = jsonErrors.get("error").getAsString();
                     dialog.dialogErrors(title, message);
@@ -362,7 +361,7 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
         }
     }
 
-    public void actionReceivedChallenge(){
+    private void actionReceivedChallenge(){
         List<String> empty = new ArrayList<>();
         AppCompatActivity activity = new AppCompatActivity();
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
@@ -375,7 +374,7 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
 
 //region Aceptar retos abiertos
 
-    public void startChallenge(Challenge challenge, Console console, Game game){
+    private void startChallenge(Challenge challenge, Console console, Game game){
         if(rechargeController.get() != null) {
             int value = Math.round(rechargeController.get().getValue());
             String state = rechargeController.get().getState();
@@ -398,7 +397,7 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
     }
 
     //Validador de player_id del jugador
-    public boolean validatePlayerId(){
+    private boolean validatePlayerId(){
         boolean validate = true;
         User user = userController.show();
         List<ConsolePreference> consoles = preferenceController.consoles(user.getUser_id());
@@ -413,7 +412,7 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
     }
 
     //Dialog para abrir el reto abierto
-    public void dialogOpenChallenger(Challenge challenge, Console console, Game game){
+    private void dialogOpenChallenger(Challenge challenge, Console console, Game game){
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.dialog_open_challenge, null);
@@ -425,7 +424,7 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
     }
 
     //Dialog para credito
-    public void dialogNoCredit(){
+    private void dialogNoCredit(){
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.dialog_no_credit, null);
@@ -435,7 +434,7 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
         alertDialog.show();
     }
 
-    public void dialogNoPlayerId(){
+    private void dialogNoPlayerId(){
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.dialog_no_player_id, null);
@@ -446,7 +445,7 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
     }
 
     //Seteador de elementos del dialog
-    public void setElementsChallenge(View view, final AlertDialog alertDialog, final Challenge challenge, Console console, Game game){
+    private void setElementsChallenge(View view, final AlertDialog alertDialog, final Challenge challenge, Console console, Game game){
         setPreferencesChallenge(view, challenge, console, game);
         Button but_cancel = (Button)view.findViewById(R.id.but_cancel_challenge);
         Button but_done = (Button)view.findViewById(R.id.but_done_challenge);
@@ -462,14 +461,14 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
         but_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                acceptChallenge(challenge.getChallenge_id());
+                acceptChallenge(challenge);
                 alertDialog.dismiss();
             }
         });
     }
 
     //Seteador de elementos del dialog de credito activo
-    public void setElementsNoCredit(View view, final AlertDialog alertDialog){
+    private void setElementsNoCredit(View view, final AlertDialog alertDialog){
         Typeface bebas_bold = Typeface.createFromAsset(context.getAssets(), "fonts/bebas_neue_bold.ttf");
         Typeface bebas_regular = Typeface.createFromAsset(context.getAssets(), "fonts/bebas_neue_regular.ttf");
         TextView title_dialog = (TextView)view.findViewById(R.id.lbl_title_dialog);
@@ -497,17 +496,15 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
     }
 
     //Seteador de los elementos del dialog del player_id
-    public void setElementsNoPlayer(View view, final AlertDialog alertDialog){
+    private void setElementsNoPlayer(View view, final AlertDialog alertDialog){
         Typeface bebas_bold = Typeface.createFromAsset(context.getAssets(), "fonts/bebas_neue_bold.ttf");
         Typeface bebas_regular = Typeface.createFromAsset(context.getAssets(), "fonts/bebas_neue_regular.ttf");
         TextView title_dialog = (TextView)view.findViewById(R.id.lbl_title_dialog);
         title_dialog.setTypeface(bebas_bold);
-
         Button but_cancel = (Button)view.findViewById(R.id.but_cancel_player);
         but_cancel.setTypeface(bebas_regular);
         Button but_done = (Button)view.findViewById(R.id.but_done_player);
         but_done.setTypeface(bebas_regular);
-
         but_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -529,25 +526,21 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
     }
 
     //Seteador de animaciones y avatares del dialog
-    public void setlayoutPlayers(View view, Challenge challenge){
+    private void setlayoutPlayers(View view, Challenge challenge){
         Typeface bebas_regular = Typeface.createFromAsset(context.getAssets(), "fonts/bebas_neue_regular.ttf");
-
         LinearLayout layout_player_1 = (LinearLayout)view.findViewById(R.id.layout_player_1);
         LinearLayout layout_player_2 = (LinearLayout)view.findViewById(R.id.layout_player_2);
         CircleImageView player_1 = (CircleImageView)view.findViewById(R.id.avatar_player_1);
         CircleImageView player_2 = (CircleImageView)view.findViewById(R.id.avatar_player_2);
         setAvatarPlayers(player_1, player_2, challenge);
-
         Player player = playerController.find(challenge.getPlayer_one());
         TextView lbl_player_1 = (TextView)view.findViewById(R.id.lbl_player_1);
         lbl_player_1.setText(player.getUsername());
         lbl_player_1.setTypeface(bebas_regular);
-
         User user = userController.show();
         TextView lbl_player_2 = (TextView)view.findViewById(R.id.lbl_player_2);
         lbl_player_2.setText(user.getUsername());
         lbl_player_2.setTypeface(bebas_regular);
-
         YoYo.with(Techniques.BounceInLeft)
                 .duration(1300)
                 .playOn(layout_player_1);
@@ -558,7 +551,7 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
         layout_player_2.setVisibility(View.VISIBLE);
     }
 
-    public void setAvatarPlayers(CircleImageView player_1, CircleImageView player_2, Challenge challenge){
+    private void setAvatarPlayers(CircleImageView player_1, CircleImageView player_2, Challenge challenge){
         Player player = playerController.find(challenge.getPlayer_one());
         Picasso.with(context)
                 .load(player.getAvatar())
@@ -574,9 +567,8 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
     }
 
     //Seteador de las preferencias del reto abierto
-    public void setPreferencesChallenge(View view, Challenge challenge, Console console, Game game){
+    private void setPreferencesChallenge(View view, Challenge challenge, Console console, Game game){
         Typeface bebas_regular = Typeface.createFromAsset(context.getAssets(), "fonts/bebas_neue_regular.ttf");
-
         TextView lbl_title_dialog = (TextView)view.findViewById(R.id.lbl_title_dialog);
         TextView lbl_amount_dialog = (TextView)view.findViewById(R.id.lbl_amount_dialog);
         TextView txt_amount_dialog = (TextView)view.findViewById(R.id.txt_amount_dialog);
@@ -586,7 +578,6 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
         TextView txt_consoles_dialog = (TextView)view.findViewById(R.id.txt_consoles_dialog);
         TextView lbl_games_dialog = (TextView)view.findViewById(R.id.lbl_games_dialog);
         TextView txt_games_dialog = (TextView)view.findViewById(R.id.txt_games_dialog);
-
         lbl_title_dialog.setTypeface(bebas_regular);
         lbl_amount_dialog.setTypeface(bebas_regular);
         txt_amount_dialog.setTypeface(bebas_regular);
@@ -596,7 +587,6 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
         txt_consoles_dialog.setTypeface(bebas_regular);
         lbl_games_dialog.setTypeface(bebas_regular);
         txt_games_dialog.setTypeface(bebas_regular);
-
         txt_amount_dialog.setText(String.valueOf(Math.round(challenge.getInitial_value())));
         txt_real_value_bet.setText(String.valueOf(Math.round(challenge.getAmount_bet())));
         txt_consoles_dialog.setText(console.getName());
@@ -607,7 +597,7 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
 
 //region Aceptar retos abiertos
 
-    public void acceptChallenge(int challenge_id){
+    private void acceptChallenge(Challenge challenge){
         String token = "Bearer " + userController.show().getToken();
         int user_id = userController.show().getUser_id();
         int balance_id = rechargeController.get().getBalance_id();
@@ -618,7 +608,7 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
                 .setEndpoint(url)
                 .build();
         Api api = restAdapter.create(Api.class);
-        api.acceptChallenge(token, user_id, challenge_id, balance_id, new Callback<JsonObject>() {
+        api.acceptChallenge(token, user_id, challenge.getChallenge_id(), balance_id, new Callback<JsonObject>() {
             @Override
             public void success(JsonObject jsonObject, Response response) {
                 boolean success = jsonObject.get("success").getAsBoolean();
@@ -627,16 +617,14 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
                     float new_balance = jsonObject.get("new_balance").getAsFloat();
                     JsonObject json_challenge = jsonObject.get("challenge").getAsJsonObject();
                     Challenge challenge = new Gson().fromJson(json_challenge, Challenge.class);
-                    challengeController.create(challenge);
                     Balance balance = rechargeController.get();
                     balance.setValue(new_balance);
                     rechargeController.update(balance);
                     dialog.cancelProgress();
-                    openChatRoom(challenge.getChallenge_id(), challenge.getPlayer_one());
+                    openChatRoom(challenge);
                     toast.toastSuccess(message);
                 }
             }
-
             @Override
             public void failure(RetrofitError error) {
                 dialog.cancelProgress();
@@ -650,7 +638,7 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
         });
     }
 
-    public void errorsRequestAction(RetrofitError retrofitError){
+    private void errorsRequestAction(RetrofitError retrofitError){
         if(retrofitError.getKind().equals(RetrofitError.Kind.NETWORK)){
             dialog.dialogErrors("Error de conexión", retrofitError.getMessage());
         } else {
@@ -668,10 +656,9 @@ public class RowRecyclerChallengeAdapter extends RecyclerView.Adapter<RowRecycle
         }
     }
 
-    public void openChatRoom(int challenge_id, int player_id){
+    private void openChatRoom(Challenge challenge){
         Intent intent = new Intent(context, ChatRoom.class);
-        intent.putExtra("challenge_id", String.valueOf(challenge_id));
-        intent.putExtra("player_id", String.valueOf(player_id));
+        intent.putExtra("challenge", String.valueOf(challenge));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }

@@ -85,6 +85,22 @@ public class ConsoleController {
         return consoles;
     }
 
+    //Funcion que permite mostrar toda las consolas
+    public List<String> showNames(){
+        List<String> consoles_name = new ArrayList<>();
+        try {
+            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
+            RuntimeExceptionDao<Console, Integer> consoleDao = helper.getConsoleRuntimeDao();
+            List<Console> consoles = consoleDao.queryForAll();
+            for (int i = 0; i < consoles.size(); i++) {
+                consoles_name.add(consoles.get(i).getName());
+            }
+        } catch (Exception ex) {
+            Log.e("ConsoleController(show)", "Error: " + ex.getMessage());
+        }
+        return consoles_name;
+    }
+
     public Console find(int code_console){
         Console console;
         try {

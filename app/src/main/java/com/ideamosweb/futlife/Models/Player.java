@@ -9,7 +9,6 @@ import com.j256.ormlite.table.DatabaseTable;
  * Creado por Deimer Villa on 2/02/17.
  * Función:
  */
-@DatabaseTable(tableName = "players")
 public class Player {
 
     @SerializedName("id")
@@ -161,4 +160,56 @@ public class Player {
         '}';
     }
     //endregion
+
+    //region Funcion para comparar
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Player player = (Player) o;
+
+        if (ubication != player.ubication) return false;
+        if (user_id != null ? !user_id.equals(player.user_id) : player.user_id != null)
+            return false;
+        if (name != null ? !name.equals(player.name) : player.name != null) return false;
+        if (username != null ? !username.equals(player.username) : player.username != null)
+            return false;
+        if (email != null ? !email.equals(player.email) : player.email != null) return false;
+        if (avatar != null ? !avatar.equals(player.avatar) : player.avatar != null) return false;
+        if (thumbnail != null ? !thumbnail.equals(player.thumbnail) : player.thumbnail != null)
+            return false;
+        if (player_id != null ? !player_id.equals(player.player_id) : player.player_id != null)
+            return false;
+        if (city_name != null ? !city_name.equals(player.city_name) : player.city_name != null)
+            return false;
+        if (telephone != null ? !telephone.equals(player.telephone) : player.telephone != null)
+            return false;
+        if (birthdate != null ? !birthdate.equals(player.birthdate) : player.birthdate != null)
+            return false;
+        if (platform != null ? !platform.equals(player.platform) : player.platform != null)
+            return false;
+        if (social != null ? !social.equals(player.social) : player.social != null) return false;
+        return active != null ? active.equals(player.active) : player.active == null;
+    }
+    @Override
+    public int hashCode() {
+        int result = user_id != null ? user_id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (username != null ? username.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (avatar != null ? avatar.hashCode() : 0);
+        result = 31 * result + (thumbnail != null ? thumbnail.hashCode() : 0);
+        result = 31 * result + (player_id != null ? player_id.hashCode() : 0);
+        result = 31 * result + ubication;
+        result = 31 * result + (city_name != null ? city_name.hashCode() : 0);
+        result = 31 * result + (telephone != null ? telephone.hashCode() : 0);
+        result = 31 * result + (birthdate != null ? birthdate.hashCode() : 0);
+        result = 31 * result + (platform != null ? platform.hashCode() : 0);
+        result = 31 * result + (social != null ? social.hashCode() : 0);
+        result = 31 * result + (active != null ? active.hashCode() : 0);
+        return result;
+    }
+    //endregion
+
 }

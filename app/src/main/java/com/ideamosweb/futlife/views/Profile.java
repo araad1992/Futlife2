@@ -16,15 +16,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ideamosweb.futlife.Adapters.TabPagerProfileAdapter;
-import com.ideamosweb.futlife.Controllers.ChallengeController;
 import com.ideamosweb.futlife.Controllers.PreferenceController;
 import com.ideamosweb.futlife.Controllers.RechargeController;
 import com.ideamosweb.futlife.Controllers.UserController;
 import com.ideamosweb.futlife.EventBus.MessageBusInformation;
 import com.ideamosweb.futlife.Models.Balance;
-import com.ideamosweb.futlife.Models.Challenge;
 import com.ideamosweb.futlife.Models.ConsolePreference;
-import com.ideamosweb.futlife.Models.GamePreference;
 import com.ideamosweb.futlife.Models.User;
 import com.ideamosweb.futlife.Objects.City;
 import com.ideamosweb.futlife.Objects.SettingWeb;
@@ -98,10 +95,10 @@ public class Profile extends AppCompatActivity implements
     private Context context;
     private UserController userController;
     private PreferenceController preferenceController;
-    private ChallengeController challengeController;
     private RechargeController rechargeController;
     private Player player;
     private User user;
+    private int user_id;
     private MaterialDialog dialog;
     private ToastMessages toast;
     private Utils utils;
@@ -113,6 +110,7 @@ public class Profile extends AppCompatActivity implements
     private int tab_select;
     private boolean principal;
     private boolean flag_avatar;
+    private boolean edit_preferences;
 
     //Elements from dialog
     private EditText txt_username_profile;
@@ -145,11 +143,25 @@ public class Profile extends AppCompatActivity implements
         setupActivity();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(edit_preferences) {
+            if(principal) {
+                setupToolbar();
+                setupDataUser();
+            } else {
+                fab_edit_avatar.setVisibility(View.GONE);
+                getPlayer(user_id);
+            }
+            edit_preferences = false;
+        }
+    }
+
     public void setupActivity(){
         context = this;
         userController = new UserController(context);
         preferenceController = new PreferenceController(context);
-        challengeController = new ChallengeController(context);
         rechargeController = new RechargeController(context);
         dialog = new MaterialDialog(context);
         toast = new ToastMessages(context);
@@ -159,6 +171,7 @@ public class Profile extends AppCompatActivity implements
         percentage_animate_avatar = 20;
         avatar_show = true;
         flag_avatar = false;
+        edit_preferences = false;
         getExtras();
         setupAppBarLayout();
         setupLoadAvatar();
@@ -170,14 +183,14 @@ public class Profile extends AppCompatActivity implements
         Bundle extras = getIntent().getExtras();
         tab_select = extras.getInt("tab_select");
         principal = extras.getBoolean("principal");
-        int player_id = extras.getInt("user_id");
+        user_id = extras.getInt("user_id");
         user = userController.show();
         if(principal) {
             setupToolbar();
             setupDataUser();
         } else {
             fab_edit_avatar.setVisibility(View.GONE);
-            getPlayer(player_id);
+            getPlayer(user_id);
         }
     }
 
@@ -458,43 +471,6 @@ public class Profile extends AppCompatActivity implements
         }
     }
 
-    public List<ConsolePreference> getPreferencesConsoles(){
-        List<ConsolePreference> my_consoles = preferenceController.consoles(user.getUser_id());
-        List<ConsolePreference> rival_consoles = preferenceController.consoles(player.getUser_id());
-        List<ConsolePreference> equals_consoles = new ArrayList<>();
-        for (int i = 0; i < my_consoles.size(); i++) {
-            ConsolePreference my_console = my_consoles.get(i);
-            for (int j = 0; j < rival_consoles.size(); j++) {
-                ConsolePreference rival_console = rival_consoles.get(j);
-                if(my_console.equals(rival_console)) {
-                    equals_consoles.add(my_console);
-                }
-            }
-        }
-        return equals_consoles;
-    }
-
-    public List<GamePreference> getPreferencesGames(List<ConsolePreference> equals_consoles) {
-        List<GamePreference> my_games;
-        List<GamePreference> rival_games;
-        List<GamePreference> equals_games = new ArrayList<>();
-        for (int i = 0; i < equals_consoles.size(); i++) {
-            ConsolePreference console = equals_consoles.get(i);
-            my_games = preferenceController.games(user.getUser_id(), console.getConsole_id());
-            rival_games = preferenceController.games(player.getUser_id(), console.getConsole_id());
-            for (int j = 0; j < my_games.size(); j++) {
-                GamePreference my_game = my_games.get(j);
-                for (int k = 0; k < rival_games.size(); k++) {
-                    GamePreference rival_game = rival_games.get(k);
-                    if(my_game.equals(rival_game)) {
-                        equals_games.add(my_game);
-                    }
-                }
-            }
-        }
-        return equals_games;
-    }
-
     public boolean validatePlayerId(){
         boolean validate = true;
         List<ConsolePreference> consoles = preferenceController.consoles(user.getUser_id());
@@ -524,16 +500,15 @@ public class Profile extends AppCompatActivity implements
 
     public void setupViewPager(){
         List<String> tab_titles = new ArrayList<>();
-        //tab_titles.add("consolas");
+        tab_titles.add("consolas");
         if(principal){
             tab_titles.add("información");
         }
         tab_titles.add("estadísticas");
-        System.out.println(player.toString());
         view_pager.setAdapter(new TabPagerProfileAdapter(
                 getSupportFragmentManager(),
                 tab_titles, fab, principal,
-                player
+                player, user_id
         ));
         setupActivityEntry();
     }
@@ -571,7 +546,12 @@ public class Profile extends AppCompatActivity implements
         }
     }
 
-
+    @Override
+    protected void onDestroy() {
+        // Clear any configuration that was done!
+        EasyImage.clearConfiguration(context);
+        super.onDestroy();
+    }
 
     @OnClick(R.id.avatar_profile)
     public void clickAvatar(){
@@ -710,81 +690,56 @@ public class Profile extends AppCompatActivity implements
     }
 
     public void loadDataChallenge(final View view, final AlertDialog alertDialog) {
-        final List<ConsolePreference> equals_consoles = getPreferencesConsoles();
-        final List<GamePreference> equals_games = getPreferencesGames(equals_consoles);
-        if(utils.connect()) {
-            getSettings(view, alertDialog, equals_consoles, equals_games);
+        if(utils.isOnline()) {
+            getSettings(view, alertDialog);
         } else {
             Typeface bebas_regular = Typeface.createFromAsset(context.getAssets(), "fonts/bebas_neue_regular.ttf");
             TextView lbl_data_not_found = (TextView)view.findViewById(R.id.lbl_data_not_found);
             ProgressBar progress_bar_dialog = (ProgressBar)view.findViewById(R.id.progress_bar_dialog);
-            lbl_data_not_found.setText("No tienes juegos en comun con este usuario");
+            lbl_data_not_found.setText("Imposible conectar a la red Futlife");
             lbl_data_not_found.setTypeface(bebas_regular);
             lbl_data_not_found.setVisibility(View.VISIBLE);
             progress_bar_dialog.setVisibility(View.GONE);
         }
     }
 
-    public void setupViewsDialogChallenge(View view, final AlertDialog alertDialog, List<ConsolePreference> equals_consoles, List<GamePreference> equals_games, SettingWeb setting){
-        Typeface bebas_regular = Typeface.createFromAsset(context.getAssets(), "fonts/bebas_neue_regular.ttf");
+    public void setupViewsDialogChallenge(View view, final AlertDialog alertDialog, SettingWeb setting){
         TextView lbl_data_not_found = (TextView)view.findViewById(R.id.lbl_data_not_found);
         ProgressBar progress_bar_dialog = (ProgressBar)view.findViewById(R.id.progress_bar_dialog);
         LinearLayout layout_options_challenge = (LinearLayout)view.findViewById(R.id.layout_options_challenge);
-
-        if(equals_consoles.isEmpty()) {
-            lbl_data_not_found.setTypeface(bebas_regular);
-            lbl_data_not_found.setVisibility(View.VISIBLE);
-            progress_bar_dialog.setVisibility(View.GONE);
-        } else {
-            if(equals_games.isEmpty()) {
-                lbl_data_not_found.setText("No tienes juegos en comun con este usuario");
-                lbl_data_not_found.setTypeface(bebas_regular);
-                lbl_data_not_found.setVisibility(View.VISIBLE);
-                progress_bar_dialog.setVisibility(View.GONE);
-            } else {
-                lbl_data_not_found.setVisibility(View.GONE);
-                progress_bar_dialog.setVisibility(View.GONE);
-                layout_options_challenge.setVisibility(View.VISIBLE);
-                setupSpinnersAndButtons(view, equals_consoles, equals_games, alertDialog, setting);
-            }
-        }
+        lbl_data_not_found.setVisibility(View.GONE);
+        progress_bar_dialog.setVisibility(View.GONE);
+        layout_options_challenge.setVisibility(View.VISIBLE);
+        setupSpinnersAndButtons(view, alertDialog, setting);
     }
 
-    public void setupSpinnersAndButtons(View view, final List<ConsolePreference> equals_consoles, final List<GamePreference> equals_games, final AlertDialog alertDialog, SettingWeb setting){
+    public void setupSpinnersAndButtons(View view, final AlertDialog alertDialog, SettingWeb setting){
         //Spinners de las consolas y juegos
         final MaterialSpinner spinner_consoles = (MaterialSpinner)view.findViewById(R.id.spinner_consoles);
         final MaterialSpinner spinner_games = (MaterialSpinner)view.findViewById(R.id.spinner_games);
         final List<String> titles_consoles = new ArrayList<>();
         titles_consoles.add(0, "Consolas");
-        for (int i = 0; i < equals_consoles.size(); i++) {
-            titles_consoles.add(equals_consoles.get(i).getName());
-        }
+        titles_consoles.addAll(preferenceController.showNames(true));
         spinner_consoles.setItems(titles_consoles);
         spinner_games.setItems("Juegos");
         spinner_consoles.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
                 if(position != 0){
-                    int console_id = equals_consoles.get(position - 1).getConsole_id();
                     List<String> titles_games = new ArrayList<>();
                     titles_games.add(0, "Juegos");
-                    for (int i = 0; i < equals_games.size(); i++) {
-                        if(equals_games.get(i).getConsole_id() == console_id) {
-                            titles_games.add(equals_games.get(i).getName());
-                        }
-                    }
+                    int console_id = preferenceController.findForNameConsole(item.toString().trim()).getConsole_id();
+                    titles_games.addAll(preferenceController.listGames(console_id));
                     spinner_games.setItems(titles_games);
                 } else {
                     spinner_games.setItems("Juegos");
                 }
             }
         });
-
         //Selector de valor
         final ClickNumberPickerView txt_amount_bet = (ClickNumberPickerView)view.findViewById(R.id.txt_amount_bet);
         final TextView txt_real_value_bet = (TextView)view.findViewById(R.id.txt_real_value_bet);
         configurePicker(txt_amount_bet, txt_real_value_bet, setting);
-
         //Botones del dialog
         Button but_cancel = (Button)view.findViewById(R.id.but_cancel_challenge);
         Button but_done = (Button)view.findViewById(R.id.but_done_challenge);
@@ -800,8 +755,9 @@ public class Profile extends AppCompatActivity implements
             public void onClick(View v) {
                 float value = txt_amount_bet.getValue();
                 float bet_amount = Float.parseFloat(txt_real_value_bet.getText().toString().substring(1));
-                String console = spinner_consoles.getText().toString();
-                String game = spinner_games.getText().toString();
+                String console = spinner_consoles.getText().toString().trim();
+                String game = spinner_games.getText().toString().trim();
+                System.out.println(console + ", " + game);
                 sendChallenge(value, bet_amount, console, game, alertDialog);
             }
         });
@@ -839,20 +795,16 @@ public class Profile extends AppCompatActivity implements
             public void success(JsonObject jsonObject, Response response) {
                 boolean success = jsonObject.get("success").getAsBoolean();
                 if(success) {
-                    JsonObject jsonChallenge = jsonObject.getAsJsonObject("data");
-                    Challenge challenge = new Gson().fromJson(jsonChallenge, Challenge.class);
-                    challenge.setRead(true);
-                    if(challengeController.create(challenge)) {
-                        toast.toastSuccess("¡Tu reto se a enviado exitosamente!");
-
-                        Balance balance = rechargeController.get();
-                        balance.setValue(new_balance);
-                        rechargeController.update(balance);
-
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-                        fragmentManager.findFragmentById(R.id.frame_challenges_state);
-                        StationBus.getBus().post(new MessageBusChallenge(true));
-                    }
+                    toast.toastSuccess("¡Tu reto se a enviado exitosamente!");
+                    Balance balance = rechargeController.get();
+                    balance.setValue(new_balance);
+                    rechargeController.update(balance);
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.findFragmentById(R.id.frame_challenges_state);
+                    StationBus.getBus().post(new MessageBusChallenge(true));
+                } else {
+                    String message = jsonObject.get("message").getAsString();
+                    dialog.dialogWarnings("Alerta", message);
                 }
                 dialog.cancelProgress();
             }
@@ -1000,7 +952,7 @@ public class Profile extends AppCompatActivity implements
     }
 
     //Settings web
-    public void getSettings(final View view, final AlertDialog alertDialog, final List<ConsolePreference> equals_consoles, final List<GamePreference> equals_games) {
+    public void getSettings(final View view, final AlertDialog alertDialog) {
         String platform = "m";
         final String url = context.getString(R.string.url_admin);
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -1015,7 +967,7 @@ public class Profile extends AppCompatActivity implements
                 if (success) {
                     JsonObject json_setting = jsonObject.get("settings").getAsJsonObject();
                     SettingWeb setting = new Gson().fromJson(json_setting, SettingWeb.class);
-                    setupViewsDialogChallenge(view, alertDialog, equals_consoles, equals_games, setting);
+                    setupViewsDialogChallenge(view, alertDialog, setting);
                 }
             }
             @Override
@@ -1318,6 +1270,7 @@ public class Profile extends AppCompatActivity implements
     }
 
     public void openPreferences() {
+        edit_preferences = true;
         Intent intent = new Intent(context, SelectConsole.class);
         Bundle bundle = new Bundle();
         bundle.putBoolean("is_edit", true);

@@ -171,8 +171,8 @@ public class Welcome extends Activity {
                 String error = retrofitError.getBody().toString();
                 JsonParser parser = new JsonParser();
                 JsonObject jsonErrors = (JsonObject)parser.parse(error);
-                if(jsonErrors.has("error")){
-                    String message = jsonErrors.get("error").getAsString();
+                if(jsonErrors.has("message")){
+                    String message = jsonErrors.get("message").getAsString();
                     toast.toastWarning(message);
                 }
             } else {

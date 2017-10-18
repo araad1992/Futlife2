@@ -139,6 +139,30 @@ public class PreferenceController {
         return preference;
     }
 
+    //Funcion que permite mostrar el nombre de todas las consolas
+    public List<String> showNames(boolean flag){
+        List<String> names = new ArrayList<>();
+        try {
+            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
+            if(flag) {
+                RuntimeExceptionDao<ConsolePreference, Integer> preferenceDao = helper.getConsolePreferenceRuntimeDao();
+                List<ConsolePreference> consoles = preferenceDao.queryBuilder().where().eq("active", true).query();
+                for (int i = 0; i < consoles.size(); i++) {
+                    names.add(consoles.get(i).getName());
+                }
+            } else {
+                RuntimeExceptionDao<GamePreference, Integer> preferenceDao = helper.getGamePreferenceRuntimeDao();
+                List<GamePreference> games = preferenceDao.queryBuilder().where().eq("active", true).query();
+                for (int i = 0; i < games.size(); i++) {
+                    names.add(games.get(i).getName());
+                }
+            }
+        } catch (Exception ex) {
+            Log.e("PreferenceController(showNames)", "Error: " + ex.getMessage());
+        }
+        return names;
+    }
+
     public ConsolePreference findForNameConsole(String console_name){
         ConsolePreference preference;
         try {
@@ -152,6 +176,7 @@ public class PreferenceController {
                 preference = null;
             } else {
                 preference = preferences.get(0);
+                System.out.println("prefrencia: " + preference.toString());
             }
         } catch (Exception ex) {
             preference = null;
@@ -265,6 +290,21 @@ public class PreferenceController {
             Log.e("PreferenceController(list(Game))", "Error: " + ex.getMessage());
         }
         return preferences;
+    }
+
+    public List<String> listGames(int console_id){
+        List<String> names = new ArrayList<>();
+        try {
+            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
+            RuntimeExceptionDao<GamePreference, Integer> preferenceDao = helper.getGamePreferenceRuntimeDao();
+            List<GamePreference> games = preferenceDao.queryBuilder().where().eq("console_id", console_id).query();
+            for (int i = 0; i < games.size(); i++) {
+                names.add(games.get(i).getName());
+            }
+        } catch (Exception ex) {
+            Log.e("PreferenceController(listGames)", "Error: " + ex.getMessage());
+        }
+        return names;
     }
 
     public List<GamePreference> selectedGame(int game_id, int user_id){

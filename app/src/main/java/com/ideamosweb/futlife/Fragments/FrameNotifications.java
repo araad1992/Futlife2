@@ -17,15 +17,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.ideamosweb.futlife.Controllers.ChallengeController;
-import com.ideamosweb.futlife.Controllers.PlayerController;
 import com.ideamosweb.futlife.Controllers.PreferenceController;
 import com.ideamosweb.futlife.Controllers.RechargeController;
 import com.ideamosweb.futlife.Controllers.UserController;
 import com.ideamosweb.futlife.Models.Balance;
 import com.ideamosweb.futlife.Models.Challenge;
 import com.ideamosweb.futlife.Models.ConsolePreference;
-import com.ideamosweb.futlife.Models.Player;
 import com.ideamosweb.futlife.Models.User;
 import com.ideamosweb.futlife.R;
 import com.ideamosweb.futlife.Service.Api;
@@ -57,15 +54,12 @@ public class FrameNotifications extends Fragment {
 
     private Context context;
     private UserController userController;
-    private ChallengeController challengeController;
     private RechargeController rechargeController;
     private PreferenceController preferenceController;
-    private static Challenge challenge;
-    private static Player player;
+    private Challenge challenge;
     private MaterialDialog dialog;
     private ToastMessages toast;
     private Utils utils;
-    private static boolean open;
 
     //Elementos
     @Bind(R.id.avatar_player)CircleImageView circle_avatar_player;
@@ -79,14 +73,8 @@ public class FrameNotifications extends Fragment {
     @Bind(R.id.lbl_wait)TextView lbl_wait;
     @Bind(R.id.lbl_done)TextView lbl_done;
 
-    public static FrameNotifications newInstance(int challenge_id, int player_id) {
-        FrameNotifications notifications = new FrameNotifications();
-        Bundle args = new Bundle();
-        args.putInt("challenge", challenge_id);
-        args.putInt("player", player_id);
-        args.putBoolean("open", open);
-        notifications.setArguments(args);
-        return notifications;
+    public static FrameNotifications newInstance() {
+        return new FrameNotifications();
     }
 
     public FrameNotifications() {}
@@ -108,16 +96,7 @@ public class FrameNotifications extends Fragment {
 
     public void readBundles(Bundle bundle){
         if (bundle != null) {
-            challengeController = new ChallengeController(context);
-            PlayerController playerController = new PlayerController(context);
-
-            int challenge_id = Integer.parseInt(bundle.getString("challenge_id"));
-            int player_id = Integer.parseInt(bundle.getString("player_id"));
-            open = bundle.getBoolean("open");
-
-            challenge = challengeController.show(challenge_id);
-            player = playerController.find(player_id);
-
+            challenge = (Challenge)bundle.getSerializable("challenge");
             dialog = new MaterialDialog(getContext());
             toast = new ToastMessages(getContext());
             utils = new Utils(getContext());
@@ -178,7 +157,6 @@ public class FrameNotifications extends Fragment {
     public void setReadChallenge(){
         if(!challenge.isRead()) {
             challenge.setRead(true);
-            challengeController.update(challenge);
             System.out.println(challenge);
             updateFragment();
         }
@@ -198,7 +176,14 @@ public class FrameNotifications extends Fragment {
     }
 
     public void avatarPlayer(){
-        Picasso.with(context).load(player.getThumbnail())
+        String url_player;
+        User user = userController.show();
+        if(user.getUser_id() == challenge.getPlayer_one()) {
+            url_player = challenge.getAvatar_two();
+        } else {
+            url_player = challenge.getAvatar_one();
+        }
+        Picasso.with(context).load(url_player)
                 .fit()
                 .placeholder(R.drawable.avatar_default)
                 .error(R.drawable.avatar_default)
@@ -208,12 +193,19 @@ public class FrameNotifications extends Fragment {
     }
 
     public void clickCardDetails(CircleImageView avatar){
+        final int player_id;
+        User user = userController.show();
+        if(user.getUser_id() == challenge.getPlayer_one()) {
+            player_id = challenge.getPlayer_two();
+        } else {
+            player_id = challenge.getPlayer_one();
+        }
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent profile = new Intent(getActivity(), Profile.class);
                 profile.putExtra("tab_select", 0);
-                profile.putExtra("user_id", player.getUser_id());
+                profile.putExtra("user_id", player_id);
                 profile.putExtra("principal", false);
                 startActivity(profile);
             }
@@ -221,10 +213,20 @@ public class FrameNotifications extends Fragment {
     }
 
     public void setInfoPlayer(){
+        User user = userController.show();
         String value = String.valueOf(Math.round(challenge.getInitial_value()));
         String gain = String.valueOf(Math.round(challenge.getAmount_bet()));
-        lbl_username_player.setText(player.getUsername());
-        lbl_fullname_player.setText(player.getName());
+        String username;
+        String fullname;
+        if(user.getUser_id() == challenge.getPlayer_one()) {
+            username = challenge.getUsername_two();
+            fullname = challenge.getName_two();
+        } else {
+            fullname = challenge.getName_one();
+            username = challenge.getUsername_one();
+        }
+        lbl_username_player.setText(username);
+        lbl_fullname_player.setText(fullname);
         lbl_amount.setText("Apuesta: $" + value + " COP");
         lbl_gain.setText("Ganancia: $" + gain + " COP");
     }
@@ -404,14 +406,19 @@ public class FrameNotifications extends Fragment {
     public void openChatRoom(String state){
         if(state.equalsIgnoreCase("aceptado")) {
             Intent chat_room = new Intent(getActivity(), ChatRoom.class);
-            chat_room.putExtra("challenge_id", String.valueOf(challenge.getChallenge_id()));
-            chat_room.putExtra("player_id", String.valueOf(player.getUser_id()));
+            chat_room.putExtra("challenge", challenge);
             startActivity(chat_room);
         }
     }
 
     public void launchResponse(final String state){
         User user = userController.show();
+        int player_id;
+        if(user.getUser_id() == challenge.getPlayer_one()) {
+            player_id = challenge.getPlayer_two();
+        } else {
+            player_id = challenge.getPlayer_one();
+        }
         String token = "Bearer " + user.getToken();
         int balance_id = rechargeController.get().getBalance_id();
         dialog.dialogProgress("Respondiendo...");
@@ -421,7 +428,7 @@ public class FrameNotifications extends Fragment {
                 .setEndpoint(url)
                 .build();
         Api api = restAdapter.create(Api.class);
-        api.responseChallenge(token, challenge.getChallenge_id(), player.getUser_id(),
+        api.responseChallenge(token, challenge.getChallenge_id(), player_id,
                 user.getUser_id(), challenge.getAmount_bet(), state, balance_id, new Callback<JsonObject>() {
             @Override
             public void success(JsonObject jsonObject, Response response) {
@@ -434,7 +441,6 @@ public class FrameNotifications extends Fragment {
                     challenge.setState(state);
                     challenge.setDeadline(deadline);
                     challenge.setUpdated_at(updated_at);
-                    challengeController.update(challenge);
                     updateValueBalance(challenge.getInitial_value(), state);
                     updateFragment();
                     openChatRoom(state);
@@ -468,6 +474,12 @@ public class FrameNotifications extends Fragment {
 
     public void cancelChallenge(final String state){
         User user = userController.show();
+        int player_id;
+        if(user.getUser_id() == challenge.getPlayer_one()) {
+            player_id = challenge.getPlayer_two();
+        } else {
+            player_id = challenge.getPlayer_one();
+        }
         String token = "Bearer " + user.getToken();
         int balance_id = rechargeController.get().getBalance_id();
         dialog.dialogProgress("Cancelando...");
@@ -478,7 +490,7 @@ public class FrameNotifications extends Fragment {
                 .build();
         Api api = restAdapter.create(Api.class);
         api.cancelChallenge(token, challenge.getChallenge_id(), balance_id, state,
-                user.getUser_id(), player.getUser_id(), new Callback<JsonObject>() {
+                user.getUser_id(), player_id, new Callback<JsonObject>() {
                     @Override
                     public void success(JsonObject jsonObject, Response response) {
                         boolean success = jsonObject.get("success").getAsBoolean();
@@ -487,7 +499,6 @@ public class FrameNotifications extends Fragment {
                             float new_value = jsonObject.get("new_balance").getAsFloat();
                             toast.toastSuccess(message);
                             challenge.setState(state);
-                            challengeController.update(challenge);
                             Balance balance = rechargeController.get();
                             balance.setValue(new_value);
                             rechargeController.update(balance);
@@ -495,7 +506,6 @@ public class FrameNotifications extends Fragment {
                             String message = jsonObject.get("message").getAsString();
                             String new_state = jsonObject.get("state").getAsString();
                             challenge.setState(new_state);
-                            challengeController.update(challenge);
                             updateFragment();
                             openChatRoom(new_state);
                             toast.toastInfo(message);

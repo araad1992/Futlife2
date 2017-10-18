@@ -70,7 +70,7 @@ public class GameController {
     }
 
     //Funcion que permite mostrar todos los juegos
-    public List<Game> show(List<GamePreference> preferences){
+    public List<Game> show(List<GamePreference> preferences) {
         List<Game> games = new ArrayList<>();
         try {
             helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
@@ -83,6 +83,22 @@ public class GameController {
             Log.e("GameController(show)", "Error: " + ex.getMessage());
         }
         return games;
+    }
+
+    //Funcion que permite mostrar todos los juegos
+    public List<String> showNames() {
+        List<String> games_name = new ArrayList<>();
+        try {
+            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
+            RuntimeExceptionDao<Game, Integer> gameDao = helper.getGameRuntimeDao();
+            List<Game> games = gameDao.queryForAll();
+            for (int i = 0; i < games.size(); i++) {
+                games_name.add(games.get(i).getName());
+            }
+        } catch (Exception ex) {
+            Log.e("GameController(show)", "Error: " + ex.getMessage());
+        }
+        return games_name;
     }
 
     //Funcion que permite mostrar todos los juegos

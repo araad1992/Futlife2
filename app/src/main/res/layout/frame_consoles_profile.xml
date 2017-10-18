@@ -6,6 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_gravity="center"
+        android:layout_width="90dp"
+        android:layout_height="90dp" />
     <LinearLayout
         android:id="@+id/layout_data_not_found"
         android:visibility="gone"
@@ -26,6 +31,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_consoles_profile"
         tools:listitem="@layout/row_console_profile"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>

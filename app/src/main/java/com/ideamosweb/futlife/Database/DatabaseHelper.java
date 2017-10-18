@@ -3,14 +3,12 @@ package com.ideamosweb.futlife.Database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import com.ideamosweb.futlife.Models.Challenge;
 import com.ideamosweb.futlife.Models.Console;
 import com.ideamosweb.futlife.Models.ConsolePreference;
 import com.ideamosweb.futlife.Models.Game;
 import com.ideamosweb.futlife.Models.GamePreference;
 import com.ideamosweb.futlife.Models.Message;
 import com.ideamosweb.futlife.Models.Platform;
-import com.ideamosweb.futlife.Models.Player;
 import com.ideamosweb.futlife.Models.Balance;
 import com.ideamosweb.futlife.Models.Report;
 import com.ideamosweb.futlife.Models.Social;
@@ -49,14 +47,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private RuntimeExceptionDao<Console, Integer> consoleRuntimeDao = null;
     private Dao<Game, Integer> gameDao = null;
     private RuntimeExceptionDao<Game, Integer> gameRuntimeDao = null;
-    private Dao<Player, Integer> playerDao = null;
-    private RuntimeExceptionDao<Player, Integer> playerRuntimeDao = null;
     private Dao<ConsolePreference, Integer> consolePreferencesDao = null;
     private RuntimeExceptionDao<ConsolePreference, Integer> consolePreferencesRuntimeDao = null;
     private Dao<GamePreference, Integer> gamePreferencesDao = null;
     private RuntimeExceptionDao<GamePreference, Integer> gamePreferencesRuntimeDao = null;
-    private Dao<Challenge, Integer> challengeDao = null;
-    private RuntimeExceptionDao<Challenge, Integer> challengeRuntimeDao = null;
     private Dao<Report, Integer> reportDao = null;
     private RuntimeExceptionDao<Report, Integer> reportRuntimeDao = null;
     private Dao<Message, Integer> messageDao = null;
@@ -73,10 +67,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(source, User.class);
             TableUtils.createTable(source, Social.class);
             TableUtils.createTable(source, Balance.class);
-            TableUtils.createTable(source, Player.class);
             TableUtils.createTable(source, ConsolePreference.class);
             TableUtils.createTable(source, GamePreference.class);
-            TableUtils.createTable(source, Challenge.class);
             TableUtils.createTable(source, Report.class);
             TableUtils.createTable(source, Message.class);
             //Configuración
@@ -105,10 +97,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(source, Platform.class, true);
             TableUtils.dropTable(source, Console.class, true);
             TableUtils.dropTable(source, Game.class, true);
-            TableUtils.dropTable(source, Player.class, true);
             TableUtils.dropTable(source, ConsolePreference.class, true);
             TableUtils.dropTable(source, GamePreference.class, true);
-            TableUtils.dropTable(source, Challenge.class, true);
             TableUtils.dropTable(source, Report.class, true);
             TableUtils.dropTable(source, Message.class, true);
             onCreate(db, source);
@@ -129,20 +119,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(source, User.class, true);
             TableUtils.dropTable(source, Social.class, true);
             TableUtils.dropTable(source, Balance.class, true);
-            TableUtils.dropTable(source, Player.class, true);
             TableUtils.dropTable(source, ConsolePreference.class, true);
             TableUtils.dropTable(source, GamePreference.class, true);
-            TableUtils.dropTable(source, Challenge.class, true);
             TableUtils.dropTable(source, Report.class, true);
             TableUtils.dropTable(source, Message.class, true);
             //Recreacion de las tablas
             TableUtils.createTable(source, User.class);
             TableUtils.createTable(source, Social.class);
             TableUtils.createTable(source, Balance.class);
-            TableUtils.createTable(source, Player.class);
             TableUtils.createTable(source, ConsolePreference.class);
             TableUtils.createTable(source, GamePreference.class);
-            TableUtils.createTable(source, Challenge.class);
             TableUtils.createTable(source, Report.class);
             TableUtils.createTable(source, Message.class);
         }catch (SQLException sqlEx){
@@ -165,14 +151,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         consoleRuntimeDao = null;
         gameDao = null;
         gameRuntimeDao = null;
-        playerDao = null;
-        playerRuntimeDao = null;
         consolePreferencesDao = null;
         gamePreferencesDao = null;
         consolePreferencesRuntimeDao = null;
         gamePreferencesRuntimeDao = null;
-        challengeDao = null;
-        challengeRuntimeDao = null;
         reportDao = null;
         reportRuntimeDao = null;
         messageDao = null;
@@ -233,15 +215,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return gameRuntimeDao;
     }
 
-    public Dao<Player, Integer> getPlayerDao() throws SQLException {
-        if(playerDao == null) playerDao = getDao(Player.class);
-        return playerDao;
-    }
-    public RuntimeExceptionDao<Player, Integer> getPlayerRuntimeDao() {
-        if(playerRuntimeDao == null) playerRuntimeDao = getRuntimeExceptionDao(Player.class);
-        return playerRuntimeDao;
-    }
-
     public Dao<ConsolePreference, Integer> getConsolePreferenceDao() throws SQLException {
         if(consolePreferencesDao == null) consolePreferencesDao = getDao(ConsolePreference.class);
         return consolePreferencesDao;
@@ -258,15 +231,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public RuntimeExceptionDao<GamePreference, Integer> getGamePreferenceRuntimeDao() {
         if(gamePreferencesRuntimeDao == null) gamePreferencesRuntimeDao = getRuntimeExceptionDao(GamePreference.class);
         return gamePreferencesRuntimeDao;
-    }
-
-    public Dao<Challenge, Integer> getChallengeDao() throws SQLException {
-        if(challengeDao == null) challengeDao = getDao(Challenge.class);
-        return challengeDao;
-    }
-    public RuntimeExceptionDao<Challenge, Integer> getChallengeRuntimeDao() {
-        if(challengeRuntimeDao == null) challengeRuntimeDao = getRuntimeExceptionDao(Challenge.class);
-        return challengeRuntimeDao;
     }
 
     public Dao<Report, Integer> getReportDao() throws SQLException {

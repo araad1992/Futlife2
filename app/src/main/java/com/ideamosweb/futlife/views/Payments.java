@@ -875,9 +875,9 @@ public class Payments extends AppCompatActivity {
                 String error = retrofitError.getBody().toString();
                 JsonParser parser = new JsonParser();
                 JsonObject jsonErrors = (JsonObject) parser.parse(error);
-                if (jsonErrors.has("error")) {
+                if (jsonErrors.has("message")) {
                     String title = retrofitError.getMessage();
-                    String message = jsonErrors.get("error").getAsString();
+                    String message = jsonErrors.get("message").getAsString();
                     dialog.dialogErrors(title, message);
                 }
             } else {

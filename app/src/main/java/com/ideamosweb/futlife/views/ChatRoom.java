@@ -179,10 +179,7 @@ public class ChatRoom extends AppCompatActivity {
 
     public void getExtras(){
         Bundle extras = getIntent().getExtras();
-        int player_id = Integer.parseInt(extras.getString("player_id"));
-        int challenge_id = Integer.parseInt(extras.getString("challenge_id"));
-        player = playerController.find(player_id);
-        challenge = challengeController.show(challenge_id);
+        Challenge challenge = (Challenge)extras.getSerializable("challenge");
         if(challenge.getState().equalsIgnoreCase("validando")){
             dialogScoreNotification();
         }

@@ -251,7 +251,9 @@ public class TabPlayers extends Fragment {
                 for (int i = 0; i < array.size(); i++) {
                     JsonObject json = array.get(i).getAsJsonObject();
                     Player player = new Gson().fromJson(json, Player.class);
-                    players.add(player);
+                    if(!players.contains(player)) {
+                        players.add(player);
+                    }
                 }
                 setupRecycler(flag);
                 toast.toastSuccess("Jugadores cargados...");

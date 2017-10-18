@@ -754,7 +754,6 @@ public class Timeline extends AppCompatActivity
     //*********************************** Elementos de los dialogs ***********************************//
 
     public void setElementsChallenge(View view, final AlertDialog alertDialog, SettingWeb setting){
-
         //Selector de valor
         final ClickNumberPickerView txt_amount_bet = (ClickNumberPickerView)view.findViewById(R.id.txt_amount_bet);
         final TextView txt_real_value_bet = (TextView)view.findViewById(R.id.txt_real_value_bet);

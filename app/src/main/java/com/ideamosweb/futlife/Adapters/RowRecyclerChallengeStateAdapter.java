@@ -20,13 +20,11 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.ideamosweb.futlife.Controllers.ChallengeController;
 import com.ideamosweb.futlife.Controllers.ConsoleController;
 import com.ideamosweb.futlife.Controllers.GameController;
-import com.ideamosweb.futlife.Controllers.PlayerController;
 import com.ideamosweb.futlife.Controllers.UserController;
 import com.ideamosweb.futlife.Models.Challenge;
-import com.ideamosweb.futlife.Models.Player;
+import com.ideamosweb.futlife.Models.User;
 import com.ideamosweb.futlife.R;
 import com.ideamosweb.futlife.Service.Api;
 import com.ideamosweb.futlife.EventBus.MessageBusChallenge;
@@ -59,14 +57,14 @@ public class RowRecyclerChallengeStateAdapter extends RecyclerView.Adapter<RowRe
     private UserController userController;
     private ConsoleController consoleController;
     private GameController gameController;
-    private List<Challenge> challenges_adapter;
-    private ChallengeController challengeController;
+    private List<Challenge> challenges;
     private MaterialDialog dialog;
     private ToastMessages toast;
+    private User user;
 
     public RowRecyclerChallengeStateAdapter(Context context, List<Challenge> challenges) {
         this.context = context;
-        this.challenges_adapter = challenges;
+        this.challenges = challenges;
     }
 
     @Override
@@ -79,7 +77,7 @@ public class RowRecyclerChallengeStateAdapter extends RecyclerView.Adapter<RowRe
 
     @Override
     public int getItemCount() {
-        return challenges_adapter.size();
+        return challenges.size();
     }
 
     public class AdapterView extends RecyclerView.ViewHolder {
@@ -107,25 +105,24 @@ public class RowRecyclerChallengeStateAdapter extends RecyclerView.Adapter<RowRe
         userController = new UserController(context);
         consoleController = new ConsoleController(context);
         gameController = new GameController(context);
-        challengeController = new ChallengeController(context);
         dialog = new MaterialDialog(dialogContext);
         toast = new ToastMessages(dialogContext);
-        Challenge challenge = challenges_adapter.get(position);
-        Player player = findPlayerNotNull(challenge.getPlayer_one(), challenge.getPlayer_two());
-        loadAvatars(holder.avatar_player_1, holder.avatar_player_2, player);
-        clickProfilePlayer(holder.avatar_player_2, player);
-        setUsernames(holder.lbl_player_1, holder.lbl_player_2, player.getUsername());
+        user = userController.show();
+        Challenge challenge = challenges.get(position);
+        loadAvatars(holder.avatar_player_1, holder.avatar_player_2, challenge);
+        clickProfilePlayer(holder.avatar_player_2, challenge);
+        setUsernames(holder.lbl_player_1, holder.lbl_player_2, challenge);
         setLabelsChallenge(holder, challenge);
         setGames(holder.img_thumbnail_game, challenge.getGame_id());
         setAmountValue(holder.lbl_amount, challenge.getInitial_value());
         isReadChallenge(holder, challenge);
-        openChallenge(holder, challenge, player);
+        openChallenge(holder, challenge);
         animateCardPlayer(holder.card_challenge, challenge);
         setStateChallenge(holder, challenge.getState());
         haveScore(holder, challenge);
     }
 
-    public void animateCardPlayer(CardView card_challenge, Challenge challenge){
+    private void animateCardPlayer(CardView card_challenge, Challenge challenge){
         if(challenge.getState().equalsIgnoreCase("en juego")) {
             YoYo.with(Techniques.BounceIn).duration(1300).playOn(card_challenge);
         } else {
@@ -133,7 +130,7 @@ public class RowRecyclerChallengeStateAdapter extends RecyclerView.Adapter<RowRe
         }
     }
 
-    public void openChallenge(final AdapterView holder, final Challenge challenge, final Player player){
+    private void openChallenge(final AdapterView holder, final Challenge challenge){
         final String state = challenge.getState();
         holder.card_challenge.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,23 +138,23 @@ public class RowRecyclerChallengeStateAdapter extends RecyclerView.Adapter<RowRe
                 if(!challenge.isRead()) {
                     challenge.setRead(true);
                     isReadChallenge(holder, challenge);
-                    openActivityNotification(challenge.getChallenge_id(), player.getUser_id());
+                    openActivityNotification(challenge);
                 } else {
                     switch (state){
                         case "enviado":
-                            openActivityNotification(challenge.getChallenge_id(), player.getUser_id());
+                            openActivityNotification(challenge);
                             break;
                         case "recibido":
-                            openActivityNotification(challenge.getChallenge_id(), player.getUser_id());
+                            openActivityNotification(challenge);
                             break;
                         case "en espera":
-                            openActivityNotification(challenge.getChallenge_id(), player.getUser_id());
+                            openActivityNotification(challenge);
                             break;
                         case "aceptado":
-                            openChatRoom(challenge.getChallenge_id(), player.getUser_id());
+                            openChatRoom(challenge);
                             break;
                         case "validando":
-                            openChatRoom(challenge.getChallenge_id(), player.getUser_id());
+                            openChatRoom(challenge);
                             break;
                         case "reportado":
                             toast.toastInfo("El reto fue reportado, acercate a la opción [Retos Reportados] " +
@@ -173,7 +170,7 @@ public class RowRecyclerChallengeStateAdapter extends RecyclerView.Adapter<RowRe
                 if(state.equalsIgnoreCase("rechazado") || state.equalsIgnoreCase("cancelado") ||
                         state.equalsIgnoreCase("expirado") || state.equalsIgnoreCase("fallido") ||
                         state.equalsIgnoreCase("terminado")) {
-                    dialogDelete(challenge.getChallenge_id());
+                    dialogDelete(challenge);
                 }
                 return true;
             }
@@ -182,24 +179,22 @@ public class RowRecyclerChallengeStateAdapter extends RecyclerView.Adapter<RowRe
 
 //region Funciones para la eliminacion de un reto
 
-    public void dialogDelete(int challenge_id){
+    private void dialogDelete(Challenge challenge){
         AlertDialog.Builder builder = new AlertDialog.Builder(dialogContext);
         LayoutInflater inflater = (LayoutInflater)dialogContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.dialog_delete, null);
         builder.setView(view);
         AlertDialog alertDialog = builder.create();
-        setElementsDelete(view, alertDialog, challenge_id);
+        setElementsDelete(view, alertDialog, challenge);
         alertDialog.show();
     }
 
-    public void setElementsDelete(View view, final AlertDialog alertDialog, final int challenge_id){
+    private void setElementsDelete(View view, final AlertDialog alertDialog, final Challenge challenge){
         Typeface bebas_regular = Typeface.createFromAsset(context.getAssets(), "fonts/bebas_neue_regular.ttf");
-
         Button but_cancel = (Button)view.findViewById(R.id.but_cancel_delete);
         but_cancel.setTypeface(bebas_regular);
         Button but_done = (Button)view.findViewById(R.id.but_done_delete);
         but_done.setTypeface(bebas_regular);
-
         but_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,13 +204,13 @@ public class RowRecyclerChallengeStateAdapter extends RecyclerView.Adapter<RowRe
         but_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteChallenge(challenge_id);
+                deleteChallenge(challenge);
                 alertDialog.dismiss();
             }
         });
     }
 
-    public void deleteChallenge(final int challenge_id){
+    private void deleteChallenge(final Challenge challenge){
         String token = "Bearer " + userController.show().getToken();
         int user_id = userController.show().getUser_id();
         dialog.dialogProgress("Eliminando reto...");
@@ -225,15 +220,14 @@ public class RowRecyclerChallengeStateAdapter extends RecyclerView.Adapter<RowRe
                 .setEndpoint(url)
                 .build();
         Api api = restAdapter.create(Api.class);
-        api.deleteChallenge(token, challenge_id, user_id, new Callback<JsonObject>() {
+        api.deleteChallenge(token, challenge.getChallenge_id(), user_id, new Callback<JsonObject>() {
             @Override
             public void success(JsonObject jsonObject, Response response) {
                 boolean success = jsonObject.get("success").getAsBoolean();
                 dialog.cancelProgress();
                 if(success) {
                     String message = jsonObject.get("message").getAsString();
-                    Challenge challenge = challengeController.show(challenge_id);
-                    challengeController.delete(challenge);
+                    challenges.remove(challenge);
                     actionReceivedChallenge();
                     toast.toastSuccess(message);
                 }
@@ -244,9 +238,9 @@ public class RowRecyclerChallengeStateAdapter extends RecyclerView.Adapter<RowRe
                 dialog.cancelProgress();
                 errorsRequest(error);
                 try {
-                    Log.d("SheetDialogPlayer(uploadAvatar)", "Errors body: " + error.getMessage());
+                    Log.d("RowRecyclerChallengeStateAdapter(deleteChallenge)", "Errors body: " + error.getMessage());
                 } catch (Exception ex) {
-                    Log.e("SheetDialogPlayer(login)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
+                    Log.e("RowRecyclerChallengeStateAdapter(deleteChallenge)", "Error ret: " + error + "; Error ex: " + ex.getMessage());
                 }
             }
         });
@@ -270,7 +264,7 @@ public class RowRecyclerChallengeStateAdapter extends RecyclerView.Adapter<RowRe
         }
     }
 
-    public void actionReceivedChallenge(){
+    private void actionReceivedChallenge(){
         AppCompatActivity activity = new AppCompatActivity();
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
         fragmentManager.findFragmentById(R.id.frame_challenges_state);
@@ -281,41 +275,35 @@ public class RowRecyclerChallengeStateAdapter extends RecyclerView.Adapter<RowRe
 
 //region LLamada a las activities de funcion de retos
 
-    public void openActivityNotification(int challenge_id, int player_id){
+    private void openActivityNotification(Challenge challenge){
         Intent intent = new Intent(context, BaseFrames.class);
         intent.putExtra("from", "notifications");
-        intent.putExtra("challenge_id", String.valueOf(challenge_id));
-        intent.putExtra("player_id", String.valueOf(player_id));
+        intent.putExtra("challenge", challenge);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
-    public void openChatRoom(int challenge_id, int player_id){
+    private void openChatRoom(Challenge challenge){
         Intent intent = new Intent(context, ChatRoom.class);
-        intent.putExtra("challenge_id", String.valueOf(challenge_id));
-        intent.putExtra("player_id", String.valueOf(player_id));
+        intent.putExtra("challenge", challenge);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
 //endregion
 
-//region Busqueda del rival del reto
-
-    public Player findPlayerNotNull(int player_one, int player_two){
-        PlayerController playerController = new PlayerController(context);
-        Player player = playerController.find(player_one);
-        if(player == null) {
-            player = playerController.find(player_two);
+    private void loadAvatars(CircleImageView avatar_1, CircleImageView avatar_2, Challenge challenge){
+        String url_avatar;
+        String url_player;
+        if(user.getUser_id() == challenge.getPlayer_one()) {
+            url_avatar = challenge.getAvatar_one();
+            url_player = challenge.getAvatar_two();
+        } else {
+            url_player = challenge.getAvatar_one();
+            url_avatar = challenge.getAvatar_two();
         }
-        return player;
-    }
-
-//endregion
-
-    public void loadAvatars(CircleImageView avatar_1, CircleImageView avatar_2, Player player){
         Picasso.with(context)
-                .load(userController.show().getThumbnail())
+                .load(url_avatar)
                 .fit()
                 .placeholder(R.drawable.avatar_default)
                 .error(R.drawable.avatar_default)
@@ -324,7 +312,7 @@ public class RowRecyclerChallengeStateAdapter extends RecyclerView.Adapter<RowRe
                 .centerCrop()
                 .into(avatar_1);
         Picasso.with(context)
-                .load(player.getThumbnail())
+                .load(url_player)
                 .fit()
                 .placeholder(R.drawable.avatar_default)
                 .error(R.drawable.avatar_default)
@@ -334,13 +322,19 @@ public class RowRecyclerChallengeStateAdapter extends RecyclerView.Adapter<RowRe
                 .into(avatar_2);
     }
 
-    public void clickProfilePlayer(CircleImageView avatar_2, final Player player){
+    private void clickProfilePlayer(CircleImageView avatar_2, Challenge challenge){
+        final int player_id;
+        if(user.getUser_id() == challenge.getPlayer_one()) {
+            player_id = challenge.getPlayer_two();
+        } else {
+            player_id = challenge.getPlayer_one();
+        }
         avatar_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, Profile.class)
                         .putExtra("tab_select", 0)
-                        .putExtra("user_id", player.getUser_id())
+                        .putExtra("user_id", player_id)
                         .putExtra("principal", false)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
@@ -348,7 +342,13 @@ public class RowRecyclerChallengeStateAdapter extends RecyclerView.Adapter<RowRe
         });
     }
 
-    public void setUsernames(TextView lbl_username_1, TextView lbl_username_2, String username_player_two){
+    private void setUsernames(TextView lbl_username_1, TextView lbl_username_2, Challenge challenge){
+        String username_player_two;
+        if(user.getUser_id() == challenge.getPlayer_one()) {
+            username_player_two = challenge.getUsername_two();
+        } else {
+            username_player_two = challenge.getUsername_one();
+        }
         String username_player_one = userController.show().getUsername();
         Typeface bebas_bold = Typeface.createFromAsset(
                 context.getAssets(), "fonts/bebas_neue_bold.ttf"
@@ -359,7 +359,7 @@ public class RowRecyclerChallengeStateAdapter extends RecyclerView.Adapter<RowRe
         lbl_username_2.setTypeface(bebas_bold);
     }
 
-    public void setLabelsChallenge(AdapterView holder, Challenge challenge){
+    private void setLabelsChallenge(AdapterView holder, Challenge challenge){
         String console = consoleController.show(challenge.getConsole_id()).getName();
         Typeface bebas_regular = Typeface.createFromAsset(context.getAssets(), "fonts/bebas_neue_regular.ttf");
         holder.lbl_level_1.setText(console);
@@ -377,7 +377,7 @@ public class RowRecyclerChallengeStateAdapter extends RecyclerView.Adapter<RowRe
         holder.lbl_state_challenge.setTypeface(bebas_regular);
     }
 
-    public void setGames(ImageView image_game, int game_id){
+    private void setGames(ImageView image_game, int game_id){
         String game = gameController.show(game_id).getThumbnail();
         Picasso.with(context)
                 .load(game)
@@ -387,14 +387,14 @@ public class RowRecyclerChallengeStateAdapter extends RecyclerView.Adapter<RowRe
                 .into(image_game);
     }
 
-    public void setAmountValue(TextView lbl_amount, float amount){
+    private void setAmountValue(TextView lbl_amount, float amount){
         Typeface bebas_regular = Typeface.createFromAsset(context.getAssets(), "fonts/bebas_neue_regular.ttf");
         String value = String.valueOf(Math.round(amount));
         lbl_amount.setText("$ " + value + " COP");
         lbl_amount.setTypeface(bebas_regular);
     }
 
-    public void isReadChallenge(AdapterView holder, Challenge challenge){
+    private void isReadChallenge(AdapterView holder, Challenge challenge){
         boolean read_challenge = challenge.isRead();
         if(read_challenge){
             holder.lbl_read_challenge.setVisibility(View.GONE);
@@ -404,7 +404,7 @@ public class RowRecyclerChallengeStateAdapter extends RecyclerView.Adapter<RowRe
         }
     }
 
-    public void haveScore(AdapterView holder, Challenge challenge){
+    private void haveScore(AdapterView holder, Challenge challenge){
         if(challenge.getState().equalsIgnoreCase("terminado")) {
             holder.lbl_score_1.setVisibility(View.VISIBLE);
             holder.lbl_score_2.setVisibility(View.VISIBLE);
@@ -421,7 +421,7 @@ public class RowRecyclerChallengeStateAdapter extends RecyclerView.Adapter<RowRe
         }
     }
 
-    public void setStateChallenge(AdapterView holder, String state_challenge) {
+    private void setStateChallenge(AdapterView holder, String state_challenge) {
         switch (state_challenge) {
             case "enviado":
                 holder.lbl_state_challenge.setTextColor(ContextCompat.getColor(context, R.color.divider));

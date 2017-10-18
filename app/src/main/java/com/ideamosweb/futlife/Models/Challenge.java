@@ -1,12 +1,15 @@
 package com.ideamosweb.futlife.Models;
 
 import com.google.gson.annotations.SerializedName;
+import com.j256.ormlite.table.DatabaseTable;
+import java.io.Serializable;
 
 /**
  * Creado por Deimer Villa on 23/03/17.
  * Función:
  */
-public class Challenge {
+@DatabaseTable(tableName = "challenges")
+public class Challenge implements Serializable {
 
     @SerializedName("id")
     private int challenge_id;

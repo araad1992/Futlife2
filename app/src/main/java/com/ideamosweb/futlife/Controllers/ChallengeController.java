@@ -30,9 +30,9 @@ public class ChallengeController {
     public boolean create(Challenge challenge){
         boolean res = true;
         try {
-            helper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
-            RuntimeExceptionDao<Challenge, Integer> challengeDao = helper.getChallengeRuntimeDao();
-            challengeDao.create(challenge);
+            //helper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
+            //RuntimeExceptionDao<Challenge, Integer> challengeDao = helper.getChallengeRuntimeDao();
+            //challengeDao.create(challenge);
         } catch (Exception ex) {
             res = false;
             Log.e("ChallengeController(create)", "Error: " + ex.getMessage());
@@ -44,9 +44,9 @@ public class ChallengeController {
     public boolean update(Challenge challenge){
         boolean res = true;
         try {
-            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
-            RuntimeExceptionDao<Challenge, Integer> challengeDao = helper.getChallengeRuntimeDao();
-            challengeDao.update(challenge);
+            //helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
+            //RuntimeExceptionDao<Challenge, Integer> challengeDao = helper.getChallengeRuntimeDao();
+            //challengeDao.update(challenge);
         } catch (Exception ex) {
             res = false;
             Log.e("ChallengeController(update)", "Error: " + ex.getMessage());
@@ -56,11 +56,11 @@ public class ChallengeController {
 
     //Funcion que permite mostrar toda los retos
     public List<Challenge> show(){
-        List<Challenge> challenges;
+        List<Challenge> challenges = null;
         try {
-            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
-            RuntimeExceptionDao<Challenge, Integer> challengeDao = helper.getChallengeRuntimeDao();
-            challenges = challengeDao.queryForAll();
+            //helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
+            //RuntimeExceptionDao<Challenge, Integer> challengeDao = helper.getChallengeRuntimeDao();
+            //challenges = challengeDao.queryForAll();
         } catch (Exception ex) {
             challenges = null;
             Log.e("ChallengeController(show)", "Error: " + ex.getMessage());
@@ -69,19 +69,19 @@ public class ChallengeController {
     }
 
     public Challenge show(int challenge_id){
-        Challenge challenge;
+        Challenge challenge = null;
         try {
-            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
-            RuntimeExceptionDao<Challenge, Integer> challengeDao = helper.getChallengeRuntimeDao();
-            List<Challenge> challenges = challengeDao.queryBuilder()
-                    .where()
-                    .eq("challenge_id", challenge_id)
-                    .query();
-            if(challenges.isEmpty()) {
-                challenge = null;
-            } else {
-                challenge = challenges.get(0);
-            }
+            //helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
+            //RuntimeExceptionDao<Challenge, Integer> challengeDao = helper.getChallengeRuntimeDao();
+            //List<Challenge> challenges = challengeDao.queryBuilder()
+            //        .where()
+            //        .eq("challenge_id", challenge_id)
+            //        .query();
+            //if(challenges.isEmpty()) {
+            //    challenge = null;
+            //} else {
+            //    challenge = challenges.get(0);
+            //}
         } catch (Exception ex) {
             challenge = null;
             Log.e("ChallengeController(show)", "Error: " + ex.getMessage());
@@ -90,21 +90,21 @@ public class ChallengeController {
     }
 
     public Challenge show(int user_id, int challenge_id){
-        Challenge challenge;
+        Challenge challenge = null;
         try {
-            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
-            RuntimeExceptionDao<Challenge, Integer> challengeDao = helper.getChallengeRuntimeDao();
-            List<Challenge> challenges = challengeDao.queryBuilder()
-                    .where()
-                    .eq("player_one", user_id)
-                    .and()
-                    .eq("challenge_id", challenge_id)
-                    .query();
-            if(challenges.isEmpty()) {
-                challenge = null;
-            } else {
-                challenge = challenges.get(0);
-            }
+            //helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
+            //RuntimeExceptionDao<Challenge, Integer> challengeDao = helper.getChallengeRuntimeDao();
+            //List<Challenge> challenges = challengeDao.queryBuilder()
+            //        .where()
+            //        .eq("player_one", user_id)
+            //        .and()
+            //        .eq("challenge_id", challenge_id)
+            //        .query();
+            //if(challenges.isEmpty()) {
+            //    challenge = null;
+            //} else {
+            //    challenge = challenges.get(0);
+            //}
         } catch (Exception ex) {
             challenge = null;
             Log.e("ChallengeController(show)", "Error: " + ex.getMessage());
@@ -116,13 +116,13 @@ public class ChallengeController {
         List<Challenge> challenges = new ArrayList<>();
         try {
             helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
-            RuntimeExceptionDao<Challenge, Integer> challengeDao = helper.getChallengeRuntimeDao();
-            challenges = challengeDao.queryBuilder()
-                    .orderBy("updated_at", false)
-                    .where()
-                    .eq("player_one", user_id)
-                    .or().eq("player_two", user_id)
-                    .query();
+            //RuntimeExceptionDao<Challenge, Integer> challengeDao = helper.getChallengeRuntimeDao();
+            //challenges = challengeDao.queryBuilder()
+            //        .orderBy("updated_at", false)
+            //        .where()
+            //        .eq("player_one", user_id)
+            //        .or().eq("player_two", user_id)
+            //        .query();
         } catch (Exception ex) {
             Log.e("ChallengeController(list)", "Error: " + ex.getMessage());
         }
@@ -130,16 +130,16 @@ public class ChallengeController {
     }
 
     public List<Challenge> get(){
-        List<Challenge> challenges;
+        List<Challenge> challenges = new ArrayList<>();
         try {
-            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
-            RuntimeExceptionDao<Challenge, Integer> challengeDao = helper.getChallengeRuntimeDao();
-            challenges = challengeDao.queryBuilder()
-                    .orderBy("challenge_id", false)
-                    .where()
-                    .eq("type", "abierto")
-                    .and().eq("state", "en espera")
-                    .query();
+            //helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
+            //RuntimeExceptionDao<Challenge, Integer> challengeDao = helper.getChallengeRuntimeDao();
+            //challenges = challengeDao.queryBuilder()
+            //        .orderBy("challenge_id", false)
+            //        .where()
+            //        .eq("type", "abierto")
+            //        .and().eq("state", "en espera")
+            //        .query();
         } catch (Exception ex) {
             challenges = new ArrayList<>();
             Log.e("ChallengeController(get)", "Error: " + ex.getMessage());
@@ -151,9 +151,9 @@ public class ChallengeController {
     public boolean delete(Challenge challenge){
         boolean res = true;
         try {
-            helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
-            RuntimeExceptionDao<Challenge, Integer> challengeDao = helper.getChallengeRuntimeDao();
-            challengeDao.delete(challenge);
+            //helper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
+            //RuntimeExceptionDao<Challenge, Integer> challengeDao = helper.getChallengeRuntimeDao();
+            //challengeDao.delete(challenge);
         } catch (Exception ex) {
             res = false;
             Log.e("ChallengeController(delete)", "Error: " + ex.getMessage());
